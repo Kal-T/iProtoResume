@@ -1,0 +1,15 @@
+# Networking & gRPC (Get latest for Python 3.13 support)
+grpcio
+grpcio-tools
+
+# Vector DB
+chromadb>=0.4.22
+
+# AI / LangChain
+langchain>=0.1.0
+langchain-community>=0.0.10
+langchain-openai>=0.0.2
+python-dotenv>=1.0.0
+
+# Testing
+pytest>=7.4.0
