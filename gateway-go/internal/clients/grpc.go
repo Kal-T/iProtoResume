@@ -7,17 +7,16 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/iprotoresume/shared/proto/ats"
-	"github.com/iprotoresume/shared/proto/resume"
+	pb "github.com/iprotoresume/shared/proto"
 )
 
 type ValidationClient struct {
-	Client     ats.ATSServiceClient
+	Client     pb.ATSServiceClient
 	Connection *grpc.ClientConn
 }
 
 type TailorClient struct {
-	Client     resume.ResumeServiceClient
+	Client     pb.ResumeServiceClient
 	Connection *grpc.ClientConn
 }
 
@@ -32,7 +31,7 @@ func NewATSClient() (*ValidationClient, error) {
 		return nil, err
 	}
 
-	client := ats.NewATSServiceClient(conn)
+	client := pb.NewATSServiceClient(conn)
 	log.Printf("Connected to ATS Service at %s", addr)
 
 	return &ValidationClient{
@@ -52,7 +51,7 @@ func NewResumeClient() (*TailorClient, error) {
 		return nil, err
 	}
 
-	client := resume.NewResumeServiceClient(conn)
+	client := pb.NewResumeServiceClient(conn)
 	log.Printf("Connected to RAG Service at %s", addr)
 
 	return &TailorClient{

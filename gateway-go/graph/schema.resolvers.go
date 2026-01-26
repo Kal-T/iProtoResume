@@ -10,14 +10,13 @@ import (
 	"fmt"
 
 	"github.com/iprotoresume/gateway-go/graph/model"
-	"github.com/iprotoresume/shared/proto/ats"
-	"github.com/iprotoresume/shared/proto/resume"
+	pb "github.com/iprotoresume/shared/proto"
 )
 
 // TailorResume is the resolver for the tailorResume field.
 func (r *mutationResolver) TailorResume(ctx context.Context, input model.TailorResumeInput) (*model.TailorResponse, error) {
-	req := &resume.TailorRequest{
-		OriginalResume: &resume.ResumeData{
+	req := &pb.TailorRequest{
+		OriginalResume: &pb.ResumeData{
 			FullName: input.OriginalResume.FullName,
 			Email:    input.OriginalResume.Email,
 			Skills:   input.OriginalResume.Skills,
@@ -43,8 +42,8 @@ func (r *mutationResolver) TailorResume(ctx context.Context, input model.TailorR
 
 // ValidateResume is the resolver for the validateResume field.
 func (r *mutationResolver) ValidateResume(ctx context.Context, input model.ValidateResumeInput) (*model.ATSScore, error) {
-	req := &ats.ValidationRequest{
-		Resume: &resume.ResumeData{
+	req := &pb.ValidationRequest{
+		Resume: &pb.ResumeData{
 			FullName: input.Resume.FullName,
 			Email:    input.Resume.Email,
 			Skills:   input.Resume.Skills,
@@ -57,11 +56,8 @@ func (r *mutationResolver) ValidateResume(ctx context.Context, input model.Valid
 		return nil, fmt.Errorf("failed to validate resume: %w", err)
 	}
 
-	// Helper to convert Int32 to Int
-	score := int(resp.Score)
-
 	return &model.ATSScore{
-		Score:           score,
+		Score:           resp.Score,
 		Feedback:        resp.Feedback,
 		MissingKeywords: resp.MissingKeywords,
 	}, nil
