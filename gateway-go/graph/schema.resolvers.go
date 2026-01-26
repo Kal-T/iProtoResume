@@ -19,8 +19,9 @@ func (r *mutationResolver) TailorResume(ctx context.Context, input model.TailorR
 		OriginalResume: &pb.ResumeData{
 			FullName: input.OriginalResume.FullName,
 			Email:    input.OriginalResume.Email,
+			Phone:    getStringValue(input.OriginalResume.Phone),
+			Summary:  getStringValue(input.OriginalResume.Summary),
 			Skills:   input.OriginalResume.Skills,
-			// Map other fields as needed...
 		},
 		JobDescription: input.JobDescription,
 	}
@@ -34,6 +35,8 @@ func (r *mutationResolver) TailorResume(ctx context.Context, input model.TailorR
 		TailoredResume: &model.ResumeData{
 			FullName: resp.TailoredResume.FullName,
 			Email:    resp.TailoredResume.Email,
+			Phone:    &resp.TailoredResume.Phone,
+			Summary:  &resp.TailoredResume.Summary,
 			Skills:   resp.TailoredResume.Skills,
 		},
 		CoverLetter: &resp.CoverLetter,
@@ -76,6 +79,14 @@ func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+
+// Helper function to safely get string value from pointer
+func getStringValue(s *string) string {
+	if s == nil {
+		return ""
+	}
+	return *s
+}
 
 // !!! WARNING !!!
 // The code below was going to be deleted when updating resolvers. It has been copied here so you have

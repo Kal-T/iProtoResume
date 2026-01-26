@@ -115,16 +115,24 @@ function App() {
                 <h2 className="text-xl font-bold mb-4">✨ Tailored Suggestion</h2>
                 <div className="mb-4">
                   <h3 className="font-semibold text-gray-700">New Summary:</h3>
-                  <p className="text-gray-600 italic">{tailoredData.tailorResume.tailoredResume.summary}</p>
+                  <p className="text-gray-600 italic">
+                    {typeof tailoredData.tailorResume.tailoredResume.summary === 'string'
+                      ? tailoredData.tailorResume.tailoredResume.summary
+                      : 'No summary generated'}
+                  </p>
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-700">Recommended Skills:</h3>
                   <div className="flex flex-wrap gap-2 mt-2">
-                    {tailoredData.tailorResume.tailoredResume.skills.map((s: string, i: number) => (
-                      <span key={i} className="bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-0.5 rounded">
-                        {s}
-                      </span>
-                    ))}
+                    {Array.isArray(tailoredData.tailorResume.tailoredResume.skills) &&
+                      tailoredData.tailorResume.tailoredResume.skills
+                        .filter((s: any) => typeof s === 'string')
+                        .map((s: string, i: number) => (
+                          <span key={i} className="bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-0.5 rounded">
+                            {s}
+                          </span>
+                        ))
+                    }
                   </div>
                 </div>
               </div>
