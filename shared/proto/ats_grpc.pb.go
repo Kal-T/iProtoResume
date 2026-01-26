@@ -4,7 +4,7 @@
 // - protoc             v6.33.4
 // source: shared/proto/ats.proto
 
-package ats
+package proto
 
 import (
 	context "context"

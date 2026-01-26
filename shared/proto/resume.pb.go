@@ -4,7 +4,7 @@
 // 	protoc        v6.33.4
 // source: shared/proto/resume.proto
 
-package resume
+package proto
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -390,7 +390,7 @@ const file_shared_proto_resume_proto_rawDesc = "" +
 	"\x0ftailored_resume\x18\x01 \x01(\v2\x12.resume.ResumeDataR\x0etailoredResume\x12!\n" +
 	"\fcover_letter\x18\x02 \x01(\tR\vcoverLetter2N\n" +
 	"\rResumeService\x12=\n" +
-	"\fTailorResume\x12\x15.resume.TailorRequest\x1a\x16.resume.TailorResponseB-Z+github.com/iprotoresume/shared/proto/resumeb\x06proto3"
+	"\fTailorResume\x12\x15.resume.TailorRequest\x1a\x16.resume.TailorResponseB&Z$github.com/iprotoresume/shared/protob\x06proto3"
 
 var (
 	file_shared_proto_resume_proto_rawDescOnce sync.Once

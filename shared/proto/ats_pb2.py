@@ -25,14 +25,14 @@ _sym_db = _symbol_database.Default()
 from shared.proto import resume_pb2 as shared_dot_proto_dot_resume__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16shared/proto/ats.proto\x12\x03\x61ts\x1a\x19shared/proto/resume.proto\"P\n\x11ValidationRequest\x12\"\n\x06resume\x18\x01 \x01(\x0b\x32\x12.resume.ResumeData\x12\x17\n\x0fjob_description\x18\x02 \x01(\t\"E\n\x08\x41TSScore\x12\r\n\x05score\x18\x01 \x01(\x05\x12\x10\n\x08\x66\x65\x65\x64\x62\x61\x63k\x18\x02 \x03(\t\x12\x18\n\x10missing_keywords\x18\x03 \x03(\t2E\n\nATSService\x12\x37\n\x0eValidateResume\x12\x16.ats.ValidationRequest\x1a\r.ats.ATSScoreB*Z(github.com/iprotoresume/shared/proto/atsb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16shared/proto/ats.proto\x12\x03\x61ts\x1a\x19shared/proto/resume.proto\"P\n\x11ValidationRequest\x12\"\n\x06resume\x18\x01 \x01(\x0b\x32\x12.resume.ResumeData\x12\x17\n\x0fjob_description\x18\x02 \x01(\t\"E\n\x08\x41TSScore\x12\r\n\x05score\x18\x01 \x01(\x05\x12\x10\n\x08\x66\x65\x65\x64\x62\x61\x63k\x18\x02 \x03(\t\x12\x18\n\x10missing_keywords\x18\x03 \x03(\t2E\n\nATSService\x12\x37\n\x0eValidateResume\x12\x16.ats.ValidationRequest\x1a\r.ats.ATSScoreB&Z$github.com/iprotoresume/shared/protob\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'shared.proto.ats_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
-  _globals['DESCRIPTOR']._serialized_options = b'Z(github.com/iprotoresume/shared/proto/ats'
+  _globals['DESCRIPTOR']._serialized_options = b'Z$github.com/iprotoresume/shared/proto'
   _globals['_VALIDATIONREQUEST']._serialized_start=58
   _globals['_VALIDATIONREQUEST']._serialized_end=138
   _globals['_ATSSCORE']._serialized_start=140

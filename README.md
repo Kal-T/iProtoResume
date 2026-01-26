@@ -17,10 +17,10 @@ The system is built on a "Contract-First" design using Protocol Buffers (gRPC) f
 ```mermaid
 graph TD
     User((User))
-    FE[Frontend (React/Tailwind)]
-    GW[Gateway (Go/GraphQL)]
-    RAG[RAG Service (Python/gRPC)]
-    ATS[ATS Service (Go/gRPC)]
+    FE["Frontend (React/Tailwind)"]
+    GW["Gateway (Go/GraphQL)"]
+    RAG["RAG Service (Python/gRPC)"]
+    ATS["ATS Service (Go/gRPC)"]
     DB[(PostgreSQL)]
     VecDB[(ChromaDB)]
 
@@ -59,7 +59,7 @@ graph TD
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-org/iProtoResume.git
+   git clone https://github.com/Kal-T/iProtoResume.git
    cd iProtoResume
    ```
 
@@ -78,11 +78,13 @@ graph TD
 
 4. **Start the Stack:**
    ```bash
+   make run
+   # OR
    docker-compose up --build
    ```
 
    - **Frontend:** [http://localhost:5173](http://localhost:5173) (once implemented)
-   - **Gateway Playground:** [http://localhost:8080/playground](http://localhost:8080/playground)
+   - **Gateway Playground:** [http://localhost:8080](http://localhost:8080)
    - **RAG Service:** [localhost:50051](localhost:50051)
 
 ---

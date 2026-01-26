@@ -4,10 +4,9 @@
 // 	protoc        v6.33.4
 // source: shared/proto/ats.proto
 
-package ats
+package proto
 
 import (
-	resume "github.com/iprotoresume/shared/proto/resume"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -24,7 +23,7 @@ const (
 
 type ValidationRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	Resume         *resume.ResumeData     `protobuf:"bytes,1,opt,name=resume,proto3" json:"resume,omitempty"`
+	Resume         *ResumeData            `protobuf:"bytes,1,opt,name=resume,proto3" json:"resume,omitempty"`
 	JobDescription string                 `protobuf:"bytes,2,opt,name=job_description,json=jobDescription,proto3" json:"job_description,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
@@ -60,7 +59,7 @@ func (*ValidationRequest) Descriptor() ([]byte, []int) {
 	return file_shared_proto_ats_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ValidationRequest) GetResume() *resume.ResumeData {
+func (x *ValidationRequest) GetResume() *ResumeData {
 	if x != nil {
 		return x.Resume
 	}
@@ -148,7 +147,7 @@ const file_shared_proto_ats_proto_rawDesc = "" +
 	"\x10missing_keywords\x18\x03 \x03(\tR\x0fmissingKeywords2E\n" +
 	"\n" +
 	"ATSService\x127\n" +
-	"\x0eValidateResume\x12\x16.ats.ValidationRequest\x1a\r.ats.ATSScoreB*Z(github.com/iprotoresume/shared/proto/atsb\x06proto3"
+	"\x0eValidateResume\x12\x16.ats.ValidationRequest\x1a\r.ats.ATSScoreB&Z$github.com/iprotoresume/shared/protob\x06proto3"
 
 var (
 	file_shared_proto_ats_proto_rawDescOnce sync.Once
@@ -166,7 +165,7 @@ var file_shared_proto_ats_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_shared_proto_ats_proto_goTypes = []any{
 	(*ValidationRequest)(nil), // 0: ats.ValidationRequest
 	(*ATSScore)(nil),          // 1: ats.ATSScore
-	(*resume.ResumeData)(nil), // 2: resume.ResumeData
+	(*ResumeData)(nil),        // 2: resume.ResumeData
 }
 var file_shared_proto_ats_proto_depIdxs = []int32{
 	2, // 0: ats.ValidationRequest.resume:type_name -> resume.ResumeData
@@ -184,6 +183,7 @@ func file_shared_proto_ats_proto_init() {
 	if File_shared_proto_ats_proto != nil {
 		return
 	}
+	file_shared_proto_resume_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

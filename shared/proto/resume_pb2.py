@@ -24,14 +24,14 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19shared/proto/resume.proto\x12\x06resume\"\xac\x01\n\nResumeData\x12\x11\n\tfull_name\x18\x01 \x01(\t\x12\r\n\x05\x65mail\x18\x02 \x01(\t\x12\r\n\x05phone\x18\x03 \x01(\t\x12\x0f\n\x07summary\x18\x04 \x01(\t\x12\x0e\n\x06skills\x18\x05 \x03(\t\x12&\n\nexperience\x18\x06 \x03(\x0b\x32\x12.resume.Experience\x12$\n\teducation\x18\x07 \x03(\x0b\x32\x11.resume.Education\"g\n\nExperience\x12\r\n\x05title\x18\x01 \x01(\t\x12\x0f\n\x07\x63ompany\x18\x02 \x01(\t\x12\x12\n\nstart_date\x18\x03 \x01(\t\x12\x10\n\x08\x65nd_date\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\"I\n\tEducation\x12\x0e\n\x06\x64\x65gree\x18\x01 \x01(\t\x12\x13\n\x0binstitution\x18\x02 \x01(\t\x12\x17\n\x0fgraduation_date\x18\x03 \x01(\t\"U\n\rTailorRequest\x12+\n\x0foriginal_resume\x18\x01 \x01(\x0b\x32\x12.resume.ResumeData\x12\x17\n\x0fjob_description\x18\x02 \x01(\t\"S\n\x0eTailorResponse\x12+\n\x0ftailored_resume\x18\x01 \x01(\x0b\x32\x12.resume.ResumeData\x12\x14\n\x0c\x63over_letter\x18\x02 \x01(\t2N\n\rResumeService\x12=\n\x0cTailorResume\x12\x15.resume.TailorRequest\x1a\x16.resume.TailorResponseB-Z+github.com/iprotoresume/shared/proto/resumeb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19shared/proto/resume.proto\x12\x06resume\"\xac\x01\n\nResumeData\x12\x11\n\tfull_name\x18\x01 \x01(\t\x12\r\n\x05\x65mail\x18\x02 \x01(\t\x12\r\n\x05phone\x18\x03 \x01(\t\x12\x0f\n\x07summary\x18\x04 \x01(\t\x12\x0e\n\x06skills\x18\x05 \x03(\t\x12&\n\nexperience\x18\x06 \x03(\x0b\x32\x12.resume.Experience\x12$\n\teducation\x18\x07 \x03(\x0b\x32\x11.resume.Education\"g\n\nExperience\x12\r\n\x05title\x18\x01 \x01(\t\x12\x0f\n\x07\x63ompany\x18\x02 \x01(\t\x12\x12\n\nstart_date\x18\x03 \x01(\t\x12\x10\n\x08\x65nd_date\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\"I\n\tEducation\x12\x0e\n\x06\x64\x65gree\x18\x01 \x01(\t\x12\x13\n\x0binstitution\x18\x02 \x01(\t\x12\x17\n\x0fgraduation_date\x18\x03 \x01(\t\"U\n\rTailorRequest\x12+\n\x0foriginal_resume\x18\x01 \x01(\x0b\x32\x12.resume.ResumeData\x12\x17\n\x0fjob_description\x18\x02 \x01(\t\"S\n\x0eTailorResponse\x12+\n\x0ftailored_resume\x18\x01 \x01(\x0b\x32\x12.resume.ResumeData\x12\x14\n\x0c\x63over_letter\x18\x02 \x01(\t2N\n\rResumeService\x12=\n\x0cTailorResume\x12\x15.resume.TailorRequest\x1a\x16.resume.TailorResponseB&Z$github.com/iprotoresume/shared/protob\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'shared.proto.resume_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
-  _globals['DESCRIPTOR']._serialized_options = b'Z+github.com/iprotoresume/shared/proto/resume'
+  _globals['DESCRIPTOR']._serialized_options = b'Z$github.com/iprotoresume/shared/proto'
   _globals['_RESUMEDATA']._serialized_start=38
   _globals['_RESUMEDATA']._serialized_end=210
   _globals['_EXPERIENCE']._serialized_start=212

@@ -4,7 +4,7 @@
 // - protoc             v6.33.4
 // source: shared/proto/resume.proto
 
-package resume
+package proto
 
 import (
 	context "context"
