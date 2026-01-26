@@ -1,0 +1,77 @@
+type ResumeData {
+  fullName: String!
+  email: String!
+  phone: String
+  summary: String
+  skills: [String!]!
+  experience: [Experience!]!
+  education: [Education!]!
+}
+
+type Experience {
+  title: String!
+  company: String!
+  startDate: String
+  endDate: String
+  description: String
+}
+
+type Education {
+  degree: String!
+  institution: String!
+  graduationDate: String
+}
+
+type TailorResponse {
+  tailoredResume: ResumeData!
+  coverLetter: String
+}
+
+type ATSScore {
+  score: Int!
+  feedback: [String!]!
+  missingKeywords: [String!]!
+}
+
+input ResumeInput {
+  fullName: String!
+  email: String!
+  phone: String
+  summary: String
+  skills: [String!]!
+  experience: [ExperienceInput!]!
+  education: [EducationInput!]!
+}
+
+input ExperienceInput {
+  title: String!
+  company: String!
+  startDate: String
+  endDate: String
+  description: String
+}
+
+input EducationInput {
+  degree: String!
+  institution: String!
+  graduationDate: String
+}
+
+input TailorResumeInput {
+  originalResume: ResumeInput!
+  jobDescription: String!
+}
+
+input ValidateResumeInput {
+  resume: ResumeInput!
+  jobDescription: String!
+}
+
+type Mutation {
+  tailorResume(input: TailorResumeInput!): TailorResponse!
+  validateResume(input: ValidateResumeInput!): ATSScore!
+}
+
+type Query {
+  health: String!
+}

@@ -1,0 +1,49 @@
+# Binaries
+bin/
+dist/
+build/
+*.exe
+*.test
+*.out
+
+# Go
+/gateway-go/gateway-go
+/ats-service-go/ats-service-go
+/go.work
+go.work.sum
+.cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+.pytest_cache/
+*.egg-info/
+
+# Node/Frontend
+node_modules/
+.next/
+out/
+build/
+.DS_Store
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Secrets
+.env
+.env.local
+.env.*.local
+
+# Docker & Logs
+*.log
+docker-compose.override.yml
+
+# Generated Proto Files (Optional: usually committed, but can be ignored if generated in CI)
+# shared/proto/*.pb.go
+# shared/proto/*_pb2.py

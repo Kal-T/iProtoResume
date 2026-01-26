@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package ats;
+
+option go_package = "github.com/iprotoresume/shared/proto";
+
+import "shared/proto/resume.proto";
+
+message ValidationRequest {
+  resume.ResumeData resume = 1;
+  string job_description = 2;
+}
+
+message ATSScore {
+  int32 score = 1; // 0-100
+  repeated string feedback = 2;
+  repeated string missing_keywords = 3;
+}
+
+service ATSService {
+  rpc ValidateResume (ValidationRequest) returns (ATSScore);
+}
