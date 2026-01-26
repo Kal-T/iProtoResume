@@ -23,7 +23,7 @@ type TailorClient struct {
 func NewATSClient() (*ValidationClient, error) {
 	addr := os.Getenv("ATS_SERVICE_URL")
 	if addr == "" {
-		addr = "localhost:50052"
+		addr = "127.0.0.1:50052"
 	}
 
 	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
@@ -43,7 +43,7 @@ func NewATSClient() (*ValidationClient, error) {
 func NewResumeClient() (*TailorClient, error) {
 	addr := os.Getenv("RAG_SERVICE_URL")
 	if addr == "" {
-		addr = "localhost:50051"
+		addr = "127.0.0.1:50051"
 	}
 
 	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
