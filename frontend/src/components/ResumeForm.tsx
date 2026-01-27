@@ -48,8 +48,8 @@ export const ResumeForm: React.FC<Props> = ({ initialData, onChange }) => {
         <div className="bg-white p-6 rounded-lg shadow-md space-y-8">
             <h2 className="text-xl font-bold border-b pb-2">Personal Details</h2>
 
-            {/* Profile Image & Theme Color */}
-            <div className="flex gap-6 items-start">
+            {/* Profile Photo, Template & Theme Color */}
+            <div className="flex flex-col md:flex-row gap-6 items-start">
                 <div className="w-full md:w-1/3">
                     <Label>Profile Photo</Label>
                     <div className="mt-1 flex flex-wrap items-center gap-3">
@@ -74,25 +74,42 @@ export const ResumeForm: React.FC<Props> = ({ initialData, onChange }) => {
                         </div>
                     </div>
                 </div>
-                <div className="w-full md:w-2/3">
-                    <Label>Theme Color</Label>
-                    <div className="flex gap-3 mt-2 flex-wrap">
-                        {/* Gray is now default/first options */}
-                        {['#4b5563', '#0e5f5f', '#1e3a8a', '#111827', '#7c3aed'].map(color => (
-                            <button
-                                key={color}
-                                onClick={() => handleChange('themeColor', color)}
-                                className={`w-8 h-8 rounded-full border-2 ${data.themeColor === color ? 'border-black ring-2 ring-gray-200' : 'border-transparent'}`}
-                                style={{ backgroundColor: color }}
-                                title={color}
+
+                <div className="w-full md:w-2/3 flex flex-col gap-4">
+                    <div>
+                        <Label>Template Design</Label>
+                        <div className="mt-1">
+                            <select
+                                value={data.templateId || 'modern'}
+                                onChange={(e) => handleChange('templateId', e.target.value)}
+                                className="block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            >
+                                <option value="modern">Modern (Split Screen)</option>
+                                <option value="classic">Classic (Single Column)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <Label>Theme Color</Label>
+                        <div className="flex gap-3 mt-2 flex-wrap">
+                            {/* Gray is now default/first options */}
+                            {['#4b5563', '#0e5f5f', '#1e3a8a', '#111827', '#7c3aed'].map(color => (
+                                <button
+                                    key={color}
+                                    onClick={() => handleChange('themeColor', color)}
+                                    className={`w-8 h-8 rounded-full border-2 ${data.themeColor === color ? 'border-black ring-2 ring-gray-200' : 'border-transparent'}`}
+                                    style={{ backgroundColor: color }}
+                                    title={color}
+                                />
+                            ))}
+                            <input
+                                type="color"
+                                value={data.themeColor || '#4b5563'}
+                                onChange={(e) => handleChange('themeColor', e.target.value)}
+                                className="w-8 h-8 p-0 border-0 rounded-full overflow-hidden cursor-pointer"
                             />
-                        ))}
-                        <input
-                            type="color"
-                            value={data.themeColor || '#4b5563'}
-                            onChange={(e) => handleChange('themeColor', e.target.value)}
-                            className="w-8 h-8 p-0 border-0 rounded-full overflow-hidden cursor-pointer"
-                        />
+                        </div>
                     </div>
                 </div>
             </div>

@@ -49,6 +49,7 @@ export interface ResumeData {
     // Phase 3 Extensions
     themeColor?: string; // Hex code for sidebar/accents
     profileImage?: string; // Base64 or URL
+    templateId?: string; // 'modern' | 'classic'
 
     // Complex sections
     experience: Experience[];

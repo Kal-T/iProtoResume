@@ -42,6 +42,7 @@ function App() {
     website: '',
     themeColor: '#4b5563', // Gray default
     profileImage: '', // Base64 or URL
+    templateId: 'modern', // Default template
     skills: [],
     skillGroups: [{ category: 'Technical Skills', items: [] }],
     languages: [],
@@ -224,7 +225,7 @@ function App() {
 
           {/* Resume Page Preview */}
           <div className="bg-white shadow-2xl origin-top transform transition-transform duration-200" style={{ transform: 'scale(0.85)' }}>
-            <ResumePreview ref={componentRef} data={previewData} />
+            <ResumePreview ref={componentRef} data={previewData} templateId={previewData.templateId} />
           </div>
 
           {tailoredData && (
