@@ -6,6 +6,19 @@ type ResumeData {
   skills: [String!]!
   experience: [Experience!]!
   education: [Education!]!
+  projects: [Project!]!
+  certificates: [Certificate!]!
+  
+  jobTitle: String
+  location: String
+  linkedin: String
+  github: String
+  website: String
+  profileImage: String
+  
+  skillGroups: [SkillGroup!]
+  languages: [Language!]
+  achievements: [Achievement!]
 }
 
 type Experience {
@@ -20,6 +33,36 @@ type Education {
   degree: String!
   institution: String!
   graduationDate: String
+}
+
+type Project {
+  title: String!
+  description: String!
+  techStack: [String!]!
+  date: String
+  location: String
+}
+
+type Certificate {
+  name: String!
+  issuer: String!
+  date: String
+  link: String
+}
+
+type SkillGroup {
+  category: String!
+  items: [String!]!
+}
+
+type Language {
+  language: String!
+  proficiency: String!
+}
+
+type Achievement {
+  title: String!
+  description: String!
 }
 
 type TailorResponse {
@@ -41,6 +84,19 @@ input ResumeInput {
   skills: [String!]!
   experience: [ExperienceInput!]!
   education: [EducationInput!]!
+  projects: [ProjectInput!]!
+  certificates: [CertificateInput!]!
+  
+  jobTitle: String
+  location: String
+  linkedin: String
+  github: String
+  website: String
+  profileImage: String
+  
+  skillGroups: [SkillGroupInput!]
+  languages: [LanguageInput!]
+  achievements: [AchievementInput!]
 }
 
 input ExperienceInput {
@@ -55,6 +111,36 @@ input EducationInput {
   degree: String!
   institution: String!
   graduationDate: String
+}
+
+input ProjectInput {
+  title: String!
+  description: String!
+  techStack: [String!]!
+  date: String
+  location: String
+}
+
+input CertificateInput {
+  name: String!
+  issuer: String!
+  date: String
+  link: String
+}
+
+input SkillGroupInput {
+  category: String!
+  items: [String!]!
+}
+
+input LanguageInput {
+  language: String!
+  proficiency: String!
+}
+
+input AchievementInput {
+  title: String!
+  description: String!
 }
 
 input TailorResumeInput {
@@ -74,4 +160,30 @@ type Mutation {
 
 type Query {
   health: String!
+}
+type SavedResume {
+  id: ID!
+  resume: ResumeData!
+  tags: [String!]!
+  version: String!
+  createdAt: String!
+}
+
+input SaveResumeInput {
+  resume: ResumeInput!
+  tags: [String!]!
+  version: String!
+}
+
+input ListResumesFilter {
+  tags: [String!]
+}
+
+extend type Mutation {
+  saveResume(input: SaveResumeInput!): SavedResume!
+  deleteResume(id: ID!): Boolean!
+}
+
+extend type Query {
+  listResumes(filter: ListResumesFilter): [SavedResume!]!
 }

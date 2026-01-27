@@ -36,9 +36,16 @@ func main() {
 	}
 	defer resumeClient.Connection.Close()
 
+	persistenceClient, err := clients.NewPersistenceClient()
+	if err != nil {
+		log.Fatalf("failed to create Persistence client: %v", err)
+	}
+	defer persistenceClient.Connection.Close()
+
 	srv := handler.New(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{
-		ATSClient:    atsClient,
-		ResumeClient: resumeClient,
+		ATSClient:         atsClient,
+		TailorClient:      resumeClient,
+		PersistenceClient: persistenceClient,
 	}}))
 
 	srv.AddTransport(transport.Options{})

@@ -23,14 +23,27 @@ const (
 
 // ResumeData represents the structured data of a user's resume.
 type ResumeData struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	FullName      string                 `protobuf:"bytes,1,opt,name=full_name,json=fullName,proto3" json:"full_name,omitempty"`
-	Email         string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
-	Phone         string                 `protobuf:"bytes,3,opt,name=phone,proto3" json:"phone,omitempty"`
-	Summary       string                 `protobuf:"bytes,4,opt,name=summary,proto3" json:"summary,omitempty"`
-	Skills        []string               `protobuf:"bytes,5,rep,name=skills,proto3" json:"skills,omitempty"`
-	Experience    []*Experience          `protobuf:"bytes,6,rep,name=experience,proto3" json:"experience,omitempty"`
-	Education     []*Education           `protobuf:"bytes,7,rep,name=education,proto3" json:"education,omitempty"`
+	state        protoimpl.MessageState `protogen:"open.v1"`
+	FullName     string                 `protobuf:"bytes,1,opt,name=full_name,json=fullName,proto3" json:"full_name,omitempty"`
+	Email        string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
+	Phone        string                 `protobuf:"bytes,3,opt,name=phone,proto3" json:"phone,omitempty"`
+	Summary      string                 `protobuf:"bytes,4,opt,name=summary,proto3" json:"summary,omitempty"`
+	Skills       []string               `protobuf:"bytes,5,rep,name=skills,proto3" json:"skills,omitempty"`
+	Experience   []*Experience          `protobuf:"bytes,6,rep,name=experience,proto3" json:"experience,omitempty"`
+	Education    []*Education           `protobuf:"bytes,7,rep,name=education,proto3" json:"education,omitempty"`
+	Projects     []*Project             `protobuf:"bytes,8,rep,name=projects,proto3" json:"projects,omitempty"`
+	Certificates []*Certificate         `protobuf:"bytes,9,rep,name=certificates,proto3" json:"certificates,omitempty"`
+	// Additional profile fields
+	JobTitle     string `protobuf:"bytes,10,opt,name=job_title,json=jobTitle,proto3" json:"job_title,omitempty"`
+	Location     string `protobuf:"bytes,11,opt,name=location,proto3" json:"location,omitempty"`
+	Linkedin     string `protobuf:"bytes,12,opt,name=linkedin,proto3" json:"linkedin,omitempty"`
+	Github       string `protobuf:"bytes,13,opt,name=github,proto3" json:"github,omitempty"`
+	Website      string `protobuf:"bytes,14,opt,name=website,proto3" json:"website,omitempty"`
+	ProfileImage string `protobuf:"bytes,18,opt,name=profile_image,json=profileImage,proto3" json:"profile_image,omitempty"` // Base64 encoded image
+	// Structured data
+	SkillGroups   []*SkillGroup  `protobuf:"bytes,15,rep,name=skill_groups,json=skillGroups,proto3" json:"skill_groups,omitempty"`
+	Languages     []*Language    `protobuf:"bytes,16,rep,name=languages,proto3" json:"languages,omitempty"`
+	Achievements  []*Achievement `protobuf:"bytes,17,rep,name=achievements,proto3" json:"achievements,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -110,6 +123,83 @@ func (x *ResumeData) GetExperience() []*Experience {
 func (x *ResumeData) GetEducation() []*Education {
 	if x != nil {
 		return x.Education
+	}
+	return nil
+}
+
+func (x *ResumeData) GetProjects() []*Project {
+	if x != nil {
+		return x.Projects
+	}
+	return nil
+}
+
+func (x *ResumeData) GetCertificates() []*Certificate {
+	if x != nil {
+		return x.Certificates
+	}
+	return nil
+}
+
+func (x *ResumeData) GetJobTitle() string {
+	if x != nil {
+		return x.JobTitle
+	}
+	return ""
+}
+
+func (x *ResumeData) GetLocation() string {
+	if x != nil {
+		return x.Location
+	}
+	return ""
+}
+
+func (x *ResumeData) GetLinkedin() string {
+	if x != nil {
+		return x.Linkedin
+	}
+	return ""
+}
+
+func (x *ResumeData) GetGithub() string {
+	if x != nil {
+		return x.Github
+	}
+	return ""
+}
+
+func (x *ResumeData) GetWebsite() string {
+	if x != nil {
+		return x.Website
+	}
+	return ""
+}
+
+func (x *ResumeData) GetProfileImage() string {
+	if x != nil {
+		return x.ProfileImage
+	}
+	return ""
+}
+
+func (x *ResumeData) GetSkillGroups() []*SkillGroup {
+	if x != nil {
+		return x.SkillGroups
+	}
+	return nil
+}
+
+func (x *ResumeData) GetLanguages() []*Language {
+	if x != nil {
+		return x.Languages
+	}
+	return nil
+}
+
+func (x *ResumeData) GetAchievements() []*Achievement {
+	if x != nil {
+		return x.Achievements
 	}
 	return nil
 }
@@ -250,6 +340,306 @@ func (x *Education) GetGraduationDate() string {
 	return ""
 }
 
+type Project struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Title         string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
+	Description   string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
+	TechStack     []string               `protobuf:"bytes,3,rep,name=tech_stack,json=techStack,proto3" json:"tech_stack,omitempty"`
+	Date          string                 `protobuf:"bytes,4,opt,name=date,proto3" json:"date,omitempty"`
+	Location      string                 `protobuf:"bytes,5,opt,name=location,proto3" json:"location,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Project) Reset() {
+	*x = Project{}
+	mi := &file_shared_proto_resume_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Project) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Project) ProtoMessage() {}
+
+func (x *Project) ProtoReflect() protoreflect.Message {
+	mi := &file_shared_proto_resume_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Project.ProtoReflect.Descriptor instead.
+func (*Project) Descriptor() ([]byte, []int) {
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *Project) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *Project) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *Project) GetTechStack() []string {
+	if x != nil {
+		return x.TechStack
+	}
+	return nil
+}
+
+func (x *Project) GetDate() string {
+	if x != nil {
+		return x.Date
+	}
+	return ""
+}
+
+func (x *Project) GetLocation() string {
+	if x != nil {
+		return x.Location
+	}
+	return ""
+}
+
+type Certificate struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Issuer        string                 `protobuf:"bytes,2,opt,name=issuer,proto3" json:"issuer,omitempty"`
+	Date          string                 `protobuf:"bytes,3,opt,name=date,proto3" json:"date,omitempty"`
+	Link          string                 `protobuf:"bytes,4,opt,name=link,proto3" json:"link,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Certificate) Reset() {
+	*x = Certificate{}
+	mi := &file_shared_proto_resume_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Certificate) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Certificate) ProtoMessage() {}
+
+func (x *Certificate) ProtoReflect() protoreflect.Message {
+	mi := &file_shared_proto_resume_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Certificate.ProtoReflect.Descriptor instead.
+func (*Certificate) Descriptor() ([]byte, []int) {
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *Certificate) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Certificate) GetIssuer() string {
+	if x != nil {
+		return x.Issuer
+	}
+	return ""
+}
+
+func (x *Certificate) GetDate() string {
+	if x != nil {
+		return x.Date
+	}
+	return ""
+}
+
+func (x *Certificate) GetLink() string {
+	if x != nil {
+		return x.Link
+	}
+	return ""
+}
+
+type SkillGroup struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Category      string                 `protobuf:"bytes,1,opt,name=category,proto3" json:"category,omitempty"`
+	Items         []string               `protobuf:"bytes,2,rep,name=items,proto3" json:"items,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SkillGroup) Reset() {
+	*x = SkillGroup{}
+	mi := &file_shared_proto_resume_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SkillGroup) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SkillGroup) ProtoMessage() {}
+
+func (x *SkillGroup) ProtoReflect() protoreflect.Message {
+	mi := &file_shared_proto_resume_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SkillGroup.ProtoReflect.Descriptor instead.
+func (*SkillGroup) Descriptor() ([]byte, []int) {
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *SkillGroup) GetCategory() string {
+	if x != nil {
+		return x.Category
+	}
+	return ""
+}
+
+func (x *SkillGroup) GetItems() []string {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+type Language struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Language      string                 `protobuf:"bytes,1,opt,name=language,proto3" json:"language,omitempty"`
+	Proficiency   string                 `protobuf:"bytes,2,opt,name=proficiency,proto3" json:"proficiency,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Language) Reset() {
+	*x = Language{}
+	mi := &file_shared_proto_resume_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Language) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Language) ProtoMessage() {}
+
+func (x *Language) ProtoReflect() protoreflect.Message {
+	mi := &file_shared_proto_resume_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Language.ProtoReflect.Descriptor instead.
+func (*Language) Descriptor() ([]byte, []int) {
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *Language) GetLanguage() string {
+	if x != nil {
+		return x.Language
+	}
+	return ""
+}
+
+func (x *Language) GetProficiency() string {
+	if x != nil {
+		return x.Proficiency
+	}
+	return ""
+}
+
+type Achievement struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Title         string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
+	Description   string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Achievement) Reset() {
+	*x = Achievement{}
+	mi := &file_shared_proto_resume_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Achievement) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Achievement) ProtoMessage() {}
+
+func (x *Achievement) ProtoReflect() protoreflect.Message {
+	mi := &file_shared_proto_resume_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Achievement.ProtoReflect.Descriptor instead.
+func (*Achievement) Descriptor() ([]byte, []int) {
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *Achievement) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *Achievement) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
 // TailorRequest is used to request a tailored resume based on a job description.
 type TailorRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
@@ -261,7 +651,7 @@ type TailorRequest struct {
 
 func (x *TailorRequest) Reset() {
 	*x = TailorRequest{}
-	mi := &file_shared_proto_resume_proto_msgTypes[3]
+	mi := &file_shared_proto_resume_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -273,7 +663,7 @@ func (x *TailorRequest) String() string {
 func (*TailorRequest) ProtoMessage() {}
 
 func (x *TailorRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_shared_proto_resume_proto_msgTypes[3]
+	mi := &file_shared_proto_resume_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -286,7 +676,7 @@ func (x *TailorRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TailorRequest.ProtoReflect.Descriptor instead.
 func (*TailorRequest) Descriptor() ([]byte, []int) {
-	return file_shared_proto_resume_proto_rawDescGZIP(), []int{3}
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *TailorRequest) GetOriginalResume() *ResumeData {
@@ -313,7 +703,7 @@ type TailorResponse struct {
 
 func (x *TailorResponse) Reset() {
 	*x = TailorResponse{}
-	mi := &file_shared_proto_resume_proto_msgTypes[4]
+	mi := &file_shared_proto_resume_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -325,7 +715,7 @@ func (x *TailorResponse) String() string {
 func (*TailorResponse) ProtoMessage() {}
 
 func (x *TailorResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_shared_proto_resume_proto_msgTypes[4]
+	mi := &file_shared_proto_resume_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -338,7 +728,7 @@ func (x *TailorResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TailorResponse.ProtoReflect.Descriptor instead.
 func (*TailorResponse) Descriptor() ([]byte, []int) {
-	return file_shared_proto_resume_proto_rawDescGZIP(), []int{4}
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *TailorResponse) GetTailoredResume() *ResumeData {
@@ -355,11 +745,323 @@ func (x *TailorResponse) GetCoverLetter() string {
 	return ""
 }
 
+type SavedResume struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	ResumeData    *ResumeData            `protobuf:"bytes,2,opt,name=resume_data,json=resumeData,proto3" json:"resume_data,omitempty"`
+	Tags          []string               `protobuf:"bytes,3,rep,name=tags,proto3" json:"tags,omitempty"`
+	Version       string                 `protobuf:"bytes,4,opt,name=version,proto3" json:"version,omitempty"`
+	CreatedAt     string                 `protobuf:"bytes,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SavedResume) Reset() {
+	*x = SavedResume{}
+	mi := &file_shared_proto_resume_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SavedResume) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SavedResume) ProtoMessage() {}
+
+func (x *SavedResume) ProtoReflect() protoreflect.Message {
+	mi := &file_shared_proto_resume_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SavedResume.ProtoReflect.Descriptor instead.
+func (*SavedResume) Descriptor() ([]byte, []int) {
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *SavedResume) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *SavedResume) GetResumeData() *ResumeData {
+	if x != nil {
+		return x.ResumeData
+	}
+	return nil
+}
+
+func (x *SavedResume) GetTags() []string {
+	if x != nil {
+		return x.Tags
+	}
+	return nil
+}
+
+func (x *SavedResume) GetVersion() string {
+	if x != nil {
+		return x.Version
+	}
+	return ""
+}
+
+func (x *SavedResume) GetCreatedAt() string {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return ""
+}
+
+type SaveResumeRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Resume        *ResumeData            `protobuf:"bytes,1,opt,name=resume,proto3" json:"resume,omitempty"`
+	Tags          []string               `protobuf:"bytes,2,rep,name=tags,proto3" json:"tags,omitempty"`
+	Version       string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SaveResumeRequest) Reset() {
+	*x = SaveResumeRequest{}
+	mi := &file_shared_proto_resume_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SaveResumeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SaveResumeRequest) ProtoMessage() {}
+
+func (x *SaveResumeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_shared_proto_resume_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SaveResumeRequest.ProtoReflect.Descriptor instead.
+func (*SaveResumeRequest) Descriptor() ([]byte, []int) {
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *SaveResumeRequest) GetResume() *ResumeData {
+	if x != nil {
+		return x.Resume
+	}
+	return nil
+}
+
+func (x *SaveResumeRequest) GetTags() []string {
+	if x != nil {
+		return x.Tags
+	}
+	return nil
+}
+
+func (x *SaveResumeRequest) GetVersion() string {
+	if x != nil {
+		return x.Version
+	}
+	return ""
+}
+
+type ListResumesRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Tags          []string               `protobuf:"bytes,1,rep,name=tags,proto3" json:"tags,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListResumesRequest) Reset() {
+	*x = ListResumesRequest{}
+	mi := &file_shared_proto_resume_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListResumesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListResumesRequest) ProtoMessage() {}
+
+func (x *ListResumesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_shared_proto_resume_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListResumesRequest.ProtoReflect.Descriptor instead.
+func (*ListResumesRequest) Descriptor() ([]byte, []int) {
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *ListResumesRequest) GetTags() []string {
+	if x != nil {
+		return x.Tags
+	}
+	return nil
+}
+
+type ListResumesResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Resumes       []*SavedResume         `protobuf:"bytes,1,rep,name=resumes,proto3" json:"resumes,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListResumesResponse) Reset() {
+	*x = ListResumesResponse{}
+	mi := &file_shared_proto_resume_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListResumesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListResumesResponse) ProtoMessage() {}
+
+func (x *ListResumesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_shared_proto_resume_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListResumesResponse.ProtoReflect.Descriptor instead.
+func (*ListResumesResponse) Descriptor() ([]byte, []int) {
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *ListResumesResponse) GetResumes() []*SavedResume {
+	if x != nil {
+		return x.Resumes
+	}
+	return nil
+}
+
+type DeleteResumeRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteResumeRequest) Reset() {
+	*x = DeleteResumeRequest{}
+	mi := &file_shared_proto_resume_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteResumeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteResumeRequest) ProtoMessage() {}
+
+func (x *DeleteResumeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_shared_proto_resume_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteResumeRequest.ProtoReflect.Descriptor instead.
+func (*DeleteResumeRequest) Descriptor() ([]byte, []int) {
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *DeleteResumeRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type DeleteResumeResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteResumeResponse) Reset() {
+	*x = DeleteResumeResponse{}
+	mi := &file_shared_proto_resume_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteResumeResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteResumeResponse) ProtoMessage() {}
+
+func (x *DeleteResumeResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_shared_proto_resume_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteResumeResponse.ProtoReflect.Descriptor instead.
+func (*DeleteResumeResponse) Descriptor() ([]byte, []int) {
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *DeleteResumeResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
 var File_shared_proto_resume_proto protoreflect.FileDescriptor
 
 const file_shared_proto_resume_proto_rawDesc = "" +
 	"\n" +
-	"\x19shared/proto/resume.proto\x12\x06resume\"\xec\x01\n" +
+	"\x19shared/proto/resume.proto\x12\x06resume\"\x9e\x05\n" +
 	"\n" +
 	"ResumeData\x12\x1b\n" +
 	"\tfull_name\x18\x01 \x01(\tR\bfullName\x12\x14\n" +
@@ -370,7 +1072,19 @@ const file_shared_proto_resume_proto_rawDesc = "" +
 	"\n" +
 	"experience\x18\x06 \x03(\v2\x12.resume.ExperienceR\n" +
 	"experience\x12/\n" +
-	"\teducation\x18\a \x03(\v2\x11.resume.EducationR\teducation\"\x98\x01\n" +
+	"\teducation\x18\a \x03(\v2\x11.resume.EducationR\teducation\x12+\n" +
+	"\bprojects\x18\b \x03(\v2\x0f.resume.ProjectR\bprojects\x127\n" +
+	"\fcertificates\x18\t \x03(\v2\x13.resume.CertificateR\fcertificates\x12\x1b\n" +
+	"\tjob_title\x18\n" +
+	" \x01(\tR\bjobTitle\x12\x1a\n" +
+	"\blocation\x18\v \x01(\tR\blocation\x12\x1a\n" +
+	"\blinkedin\x18\f \x01(\tR\blinkedin\x12\x16\n" +
+	"\x06github\x18\r \x01(\tR\x06github\x12\x18\n" +
+	"\awebsite\x18\x0e \x01(\tR\awebsite\x12#\n" +
+	"\rprofile_image\x18\x12 \x01(\tR\fprofileImage\x125\n" +
+	"\fskill_groups\x18\x0f \x03(\v2\x12.resume.SkillGroupR\vskillGroups\x12.\n" +
+	"\tlanguages\x18\x10 \x03(\v2\x10.resume.LanguageR\tlanguages\x127\n" +
+	"\fachievements\x18\x11 \x03(\v2\x13.resume.AchievementR\fachievements\"\x98\x01\n" +
 	"\n" +
 	"Experience\x12\x14\n" +
 	"\x05title\x18\x01 \x01(\tR\x05title\x12\x18\n" +
@@ -382,15 +1096,62 @@ const file_shared_proto_resume_proto_rawDesc = "" +
 	"\tEducation\x12\x16\n" +
 	"\x06degree\x18\x01 \x01(\tR\x06degree\x12 \n" +
 	"\vinstitution\x18\x02 \x01(\tR\vinstitution\x12'\n" +
-	"\x0fgraduation_date\x18\x03 \x01(\tR\x0egraduationDate\"u\n" +
+	"\x0fgraduation_date\x18\x03 \x01(\tR\x0egraduationDate\"\x90\x01\n" +
+	"\aProject\x12\x14\n" +
+	"\x05title\x18\x01 \x01(\tR\x05title\x12 \n" +
+	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1d\n" +
+	"\n" +
+	"tech_stack\x18\x03 \x03(\tR\ttechStack\x12\x12\n" +
+	"\x04date\x18\x04 \x01(\tR\x04date\x12\x1a\n" +
+	"\blocation\x18\x05 \x01(\tR\blocation\"a\n" +
+	"\vCertificate\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x16\n" +
+	"\x06issuer\x18\x02 \x01(\tR\x06issuer\x12\x12\n" +
+	"\x04date\x18\x03 \x01(\tR\x04date\x12\x12\n" +
+	"\x04link\x18\x04 \x01(\tR\x04link\">\n" +
+	"\n" +
+	"SkillGroup\x12\x1a\n" +
+	"\bcategory\x18\x01 \x01(\tR\bcategory\x12\x14\n" +
+	"\x05items\x18\x02 \x03(\tR\x05items\"H\n" +
+	"\bLanguage\x12\x1a\n" +
+	"\blanguage\x18\x01 \x01(\tR\blanguage\x12 \n" +
+	"\vproficiency\x18\x02 \x01(\tR\vproficiency\"E\n" +
+	"\vAchievement\x12\x14\n" +
+	"\x05title\x18\x01 \x01(\tR\x05title\x12 \n" +
+	"\vdescription\x18\x02 \x01(\tR\vdescription\"u\n" +
 	"\rTailorRequest\x12;\n" +
 	"\x0foriginal_resume\x18\x01 \x01(\v2\x12.resume.ResumeDataR\x0eoriginalResume\x12'\n" +
 	"\x0fjob_description\x18\x02 \x01(\tR\x0ejobDescription\"p\n" +
 	"\x0eTailorResponse\x12;\n" +
 	"\x0ftailored_resume\x18\x01 \x01(\v2\x12.resume.ResumeDataR\x0etailoredResume\x12!\n" +
-	"\fcover_letter\x18\x02 \x01(\tR\vcoverLetter2N\n" +
+	"\fcover_letter\x18\x02 \x01(\tR\vcoverLetter\"\x9f\x01\n" +
+	"\vSavedResume\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x123\n" +
+	"\vresume_data\x18\x02 \x01(\v2\x12.resume.ResumeDataR\n" +
+	"resumeData\x12\x12\n" +
+	"\x04tags\x18\x03 \x03(\tR\x04tags\x12\x18\n" +
+	"\aversion\x18\x04 \x01(\tR\aversion\x12\x1d\n" +
+	"\n" +
+	"created_at\x18\x05 \x01(\tR\tcreatedAt\"m\n" +
+	"\x11SaveResumeRequest\x12*\n" +
+	"\x06resume\x18\x01 \x01(\v2\x12.resume.ResumeDataR\x06resume\x12\x12\n" +
+	"\x04tags\x18\x02 \x03(\tR\x04tags\x12\x18\n" +
+	"\aversion\x18\x03 \x01(\tR\aversion\"(\n" +
+	"\x12ListResumesRequest\x12\x12\n" +
+	"\x04tags\x18\x01 \x03(\tR\x04tags\"D\n" +
+	"\x13ListResumesResponse\x12-\n" +
+	"\aresumes\x18\x01 \x03(\v2\x13.resume.SavedResumeR\aresumes\"%\n" +
+	"\x13DeleteResumeRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"0\n" +
+	"\x14DeleteResumeResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess2N\n" +
 	"\rResumeService\x12=\n" +
-	"\fTailorResume\x12\x15.resume.TailorRequest\x1a\x16.resume.TailorResponseB&Z$github.com/iprotoresume/shared/protob\x06proto3"
+	"\fTailorResume\x12\x15.resume.TailorRequest\x1a\x16.resume.TailorResponse2\xeb\x01\n" +
+	"\x18ResumePersistenceService\x12<\n" +
+	"\n" +
+	"SaveResume\x12\x19.resume.SaveResumeRequest\x1a\x13.resume.SavedResume\x12F\n" +
+	"\vListResumes\x12\x1a.resume.ListResumesRequest\x1a\x1b.resume.ListResumesResponse\x12I\n" +
+	"\fDeleteResume\x12\x1b.resume.DeleteResumeRequest\x1a\x1c.resume.DeleteResumeResponseB&Z$github.com/iprotoresume/shared/protob\x06proto3"
 
 var (
 	file_shared_proto_resume_proto_rawDescOnce sync.Once
@@ -404,26 +1165,51 @@ func file_shared_proto_resume_proto_rawDescGZIP() []byte {
 	return file_shared_proto_resume_proto_rawDescData
 }
 
-var file_shared_proto_resume_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_shared_proto_resume_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_shared_proto_resume_proto_goTypes = []any{
-	(*ResumeData)(nil),     // 0: resume.ResumeData
-	(*Experience)(nil),     // 1: resume.Experience
-	(*Education)(nil),      // 2: resume.Education
-	(*TailorRequest)(nil),  // 3: resume.TailorRequest
-	(*TailorResponse)(nil), // 4: resume.TailorResponse
+	(*ResumeData)(nil),           // 0: resume.ResumeData
+	(*Experience)(nil),           // 1: resume.Experience
+	(*Education)(nil),            // 2: resume.Education
+	(*Project)(nil),              // 3: resume.Project
+	(*Certificate)(nil),          // 4: resume.Certificate
+	(*SkillGroup)(nil),           // 5: resume.SkillGroup
+	(*Language)(nil),             // 6: resume.Language
+	(*Achievement)(nil),          // 7: resume.Achievement
+	(*TailorRequest)(nil),        // 8: resume.TailorRequest
+	(*TailorResponse)(nil),       // 9: resume.TailorResponse
+	(*SavedResume)(nil),          // 10: resume.SavedResume
+	(*SaveResumeRequest)(nil),    // 11: resume.SaveResumeRequest
+	(*ListResumesRequest)(nil),   // 12: resume.ListResumesRequest
+	(*ListResumesResponse)(nil),  // 13: resume.ListResumesResponse
+	(*DeleteResumeRequest)(nil),  // 14: resume.DeleteResumeRequest
+	(*DeleteResumeResponse)(nil), // 15: resume.DeleteResumeResponse
 }
 var file_shared_proto_resume_proto_depIdxs = []int32{
-	1, // 0: resume.ResumeData.experience:type_name -> resume.Experience
-	2, // 1: resume.ResumeData.education:type_name -> resume.Education
-	0, // 2: resume.TailorRequest.original_resume:type_name -> resume.ResumeData
-	0, // 3: resume.TailorResponse.tailored_resume:type_name -> resume.ResumeData
-	3, // 4: resume.ResumeService.TailorResume:input_type -> resume.TailorRequest
-	4, // 5: resume.ResumeService.TailorResume:output_type -> resume.TailorResponse
-	5, // [5:6] is the sub-list for method output_type
-	4, // [4:5] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	1,  // 0: resume.ResumeData.experience:type_name -> resume.Experience
+	2,  // 1: resume.ResumeData.education:type_name -> resume.Education
+	3,  // 2: resume.ResumeData.projects:type_name -> resume.Project
+	4,  // 3: resume.ResumeData.certificates:type_name -> resume.Certificate
+	5,  // 4: resume.ResumeData.skill_groups:type_name -> resume.SkillGroup
+	6,  // 5: resume.ResumeData.languages:type_name -> resume.Language
+	7,  // 6: resume.ResumeData.achievements:type_name -> resume.Achievement
+	0,  // 7: resume.TailorRequest.original_resume:type_name -> resume.ResumeData
+	0,  // 8: resume.TailorResponse.tailored_resume:type_name -> resume.ResumeData
+	0,  // 9: resume.SavedResume.resume_data:type_name -> resume.ResumeData
+	0,  // 10: resume.SaveResumeRequest.resume:type_name -> resume.ResumeData
+	10, // 11: resume.ListResumesResponse.resumes:type_name -> resume.SavedResume
+	8,  // 12: resume.ResumeService.TailorResume:input_type -> resume.TailorRequest
+	11, // 13: resume.ResumePersistenceService.SaveResume:input_type -> resume.SaveResumeRequest
+	12, // 14: resume.ResumePersistenceService.ListResumes:input_type -> resume.ListResumesRequest
+	14, // 15: resume.ResumePersistenceService.DeleteResume:input_type -> resume.DeleteResumeRequest
+	9,  // 16: resume.ResumeService.TailorResume:output_type -> resume.TailorResponse
+	10, // 17: resume.ResumePersistenceService.SaveResume:output_type -> resume.SavedResume
+	13, // 18: resume.ResumePersistenceService.ListResumes:output_type -> resume.ListResumesResponse
+	15, // 19: resume.ResumePersistenceService.DeleteResume:output_type -> resume.DeleteResumeResponse
+	16, // [16:20] is the sub-list for method output_type
+	12, // [12:16] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_shared_proto_resume_proto_init() }
@@ -437,9 +1223,9 @@ func file_shared_proto_resume_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_shared_proto_resume_proto_rawDesc), len(file_shared_proto_resume_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   16,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   2,
 		},
 		GoTypes:           file_shared_proto_resume_proto_goTypes,
 		DependencyIndexes: file_shared_proto_resume_proto_depIdxs,

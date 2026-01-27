@@ -69,6 +69,14 @@ export interface Certificate {
     link?: string;
 }
 
+export interface SavedResume {
+    id: string;
+    resume: ResumeData;
+    tags: string[];
+    version: string;
+    createdAt: string;
+}
+
 export interface ATSScore {
     score: number;
     missingKeywords: string[];

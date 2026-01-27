@@ -169,7 +169,7 @@ function App() {
               <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                 📝 Resume Details
               </h2>
-              <ResumeForm initialData={resume} onChange={setResume} />
+              <ResumeForm data={resume} onChange={setResume} />
             </section>
 
             <section>

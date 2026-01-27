@@ -1,35 +1,36 @@
 import React, { useState } from 'react';
 import type { ResumeData, Experience, Education, SkillGroup, Language, Achievement, Project, Certificate } from '../types';
+import { SaveResumeDialog } from './SaveResumeDialog';
+import { ResumeListDialog } from './ResumeListDialog';
 
-interface Props {
-    initialData: ResumeData;
+interface ResumeFormProps {
+    data: ResumeData;
     onChange: (data: ResumeData) => void;
 }
 
-export const ResumeForm: React.FC<Props> = ({ initialData, onChange }) => {
-    const [data, setData] = useState<ResumeData>(initialData);
+export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
+    const [isSaveOpen, setIsSaveOpen] = useState(false);
+    const [isLoadOpen, setIsLoadOpen] = useState(false);
 
     const handleChange = (field: keyof ResumeData, value: any) => {
-        const newData = { ...data, [field]: value };
-        setData(newData);
-        onChange(newData);
+        onChange({ ...data, [field]: value });
     };
 
     const updateArrayItem = <T,>(field: keyof ResumeData, index: number, itemUpdate: Partial<T>) => {
-        const array = (data[field] as any[]) || [];
+        const array = (data[field] as T[]) || [];
         const newArray = [...array];
         newArray[index] = { ...newArray[index], ...itemUpdate };
-        handleChange(field, newArray);
+        onChange({ ...data, [field]: newArray });
     };
 
     const addArrayItem = <T,>(field: keyof ResumeData, newItem: T) => {
-        const array = (data[field] as any[]) || [];
-        handleChange(field, [...array, newItem]);
+        const array = (data[field] as T[]) || [];
+        onChange({ ...data, [field]: [...array, newItem] });
     };
 
     const removeArrayItem = (field: keyof ResumeData, index: number) => {
         const array = (data[field] as any[]) || [];
-        handleChange(field, array.filter((_, i) => i !== index));
+        onChange({ ...data, [field]: array.filter((_, i) => i !== index) });
     };
 
     // Helper for file upload to Base64
@@ -46,7 +47,38 @@ export const ResumeForm: React.FC<Props> = ({ initialData, onChange }) => {
 
     return (
         <div className="bg-white p-6 rounded-lg shadow-md space-y-8">
-            <h2 className="text-xl font-bold border-b pb-2">Personal Details</h2>
+            <div className="flex justify-between items-center border-b pb-4">
+                <h2 className="text-xl font-bold">Resume Details</h2>
+                <div className="flex gap-2">
+                    <button
+                        onClick={() => setIsLoadOpen(true)}
+                        className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded hover:bg-gray-200"
+                    >
+                        📂 My Resumes
+                    </button>
+                    <button
+                        onClick={() => setIsSaveOpen(true)}
+                        className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700"
+                    >
+                        💾 Save
+                    </button>
+                </div>
+            </div>
+
+            <SaveResumeDialog
+                isOpen={isSaveOpen}
+                onClose={() => setIsSaveOpen(false)}
+                resume={data}
+                onSaved={() => alert('Resume saved successfully!')}
+            />
+
+            <ResumeListDialog
+                isOpen={isLoadOpen}
+                onClose={() => setIsLoadOpen(false)}
+                onLoad={(loadedResume) => onChange(loadedResume)}
+            />
+
+            <h3 className="text-lg font-bold border-b pb-2">Personal Details</h3>
 
             {/* Profile Photo, Template & Theme Color */}
             <div className="flex flex-col md:flex-row gap-6 items-start">

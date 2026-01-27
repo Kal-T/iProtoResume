@@ -8,6 +8,30 @@ type ATSScore struct {
 	MissingKeywords []string `json:"missingKeywords"`
 }
 
+type Achievement struct {
+	Title       string `json:"title"`
+	Description string `json:"description"`
+}
+
+type AchievementInput struct {
+	Title       string `json:"title"`
+	Description string `json:"description"`
+}
+
+type Certificate struct {
+	Name   string  `json:"name"`
+	Issuer string  `json:"issuer"`
+	Date   *string `json:"date,omitempty"`
+	Link   *string `json:"link,omitempty"`
+}
+
+type CertificateInput struct {
+	Name   string  `json:"name"`
+	Issuer string  `json:"issuer"`
+	Date   *string `json:"date,omitempty"`
+	Link   *string `json:"link,omitempty"`
+}
+
 type Education struct {
 	Degree         string  `json:"degree"`
 	Institution    string  `json:"institution"`
@@ -36,30 +60,106 @@ type ExperienceInput struct {
 	Description *string `json:"description,omitempty"`
 }
 
+type Language struct {
+	Language    string `json:"language"`
+	Proficiency string `json:"proficiency"`
+}
+
+type LanguageInput struct {
+	Language    string `json:"language"`
+	Proficiency string `json:"proficiency"`
+}
+
+type ListResumesFilter struct {
+	Tags []string `json:"tags,omitempty"`
+}
+
 type Mutation struct {
+}
+
+type Project struct {
+	Title       string   `json:"title"`
+	Description string   `json:"description"`
+	TechStack   []string `json:"techStack"`
+	Date        *string  `json:"date,omitempty"`
+	Location    *string  `json:"location,omitempty"`
+}
+
+type ProjectInput struct {
+	Title       string   `json:"title"`
+	Description string   `json:"description"`
+	TechStack   []string `json:"techStack"`
+	Date        *string  `json:"date,omitempty"`
+	Location    *string  `json:"location,omitempty"`
 }
 
 type Query struct {
 }
 
 type ResumeData struct {
-	FullName   string        `json:"fullName"`
-	Email      string        `json:"email"`
-	Phone      *string       `json:"phone,omitempty"`
-	Summary    *string       `json:"summary,omitempty"`
-	Skills     []string      `json:"skills"`
-	Experience []*Experience `json:"experience"`
-	Education  []*Education  `json:"education"`
+	FullName     string         `json:"fullName"`
+	Email        string         `json:"email"`
+	Phone        *string        `json:"phone,omitempty"`
+	Summary      *string        `json:"summary,omitempty"`
+	Skills       []string       `json:"skills"`
+	Experience   []*Experience  `json:"experience"`
+	Education    []*Education   `json:"education"`
+	Projects     []*Project     `json:"projects"`
+	Certificates []*Certificate `json:"certificates"`
+	JobTitle     *string        `json:"jobTitle,omitempty"`
+	Location     *string        `json:"location,omitempty"`
+	Linkedin     *string        `json:"linkedin,omitempty"`
+	Github       *string        `json:"github,omitempty"`
+	Website      *string        `json:"website,omitempty"`
+	ProfileImage *string        `json:"profileImage,omitempty"`
+	SkillGroups  []*SkillGroup  `json:"skillGroups,omitempty"`
+	Languages    []*Language    `json:"languages,omitempty"`
+	Achievements []*Achievement `json:"achievements,omitempty"`
 }
 
 type ResumeInput struct {
-	FullName   string             `json:"fullName"`
-	Email      string             `json:"email"`
-	Phone      *string            `json:"phone,omitempty"`
-	Summary    *string            `json:"summary,omitempty"`
-	Skills     []string           `json:"skills"`
-	Experience []*ExperienceInput `json:"experience"`
-	Education  []*EducationInput  `json:"education"`
+	FullName     string              `json:"fullName"`
+	Email        string              `json:"email"`
+	Phone        *string             `json:"phone,omitempty"`
+	Summary      *string             `json:"summary,omitempty"`
+	Skills       []string            `json:"skills"`
+	Experience   []*ExperienceInput  `json:"experience"`
+	Education    []*EducationInput   `json:"education"`
+	Projects     []*ProjectInput     `json:"projects"`
+	Certificates []*CertificateInput `json:"certificates"`
+	JobTitle     *string             `json:"jobTitle,omitempty"`
+	Location     *string             `json:"location,omitempty"`
+	Linkedin     *string             `json:"linkedin,omitempty"`
+	Github       *string             `json:"github,omitempty"`
+	Website      *string             `json:"website,omitempty"`
+	ProfileImage *string             `json:"profileImage,omitempty"`
+	SkillGroups  []*SkillGroupInput  `json:"skillGroups,omitempty"`
+	Languages    []*LanguageInput    `json:"languages,omitempty"`
+	Achievements []*AchievementInput `json:"achievements,omitempty"`
+}
+
+type SaveResumeInput struct {
+	Resume  *ResumeInput `json:"resume"`
+	Tags    []string     `json:"tags"`
+	Version string       `json:"version"`
+}
+
+type SavedResume struct {
+	ID        string      `json:"id"`
+	Resume    *ResumeData `json:"resume"`
+	Tags      []string    `json:"tags"`
+	Version   string      `json:"version"`
+	CreatedAt string      `json:"createdAt"`
+}
+
+type SkillGroup struct {
+	Category string   `json:"category"`
+	Items    []string `json:"items"`
+}
+
+type SkillGroupInput struct {
+	Category string   `json:"category"`
+	Items    []string `json:"items"`
 }
 
 type TailorResponse struct {

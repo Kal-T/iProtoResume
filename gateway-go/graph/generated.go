@@ -53,6 +53,18 @@ type ComplexityRoot struct {
 		Score           func(childComplexity int) int
 	}
 
+	Achievement struct {
+		Description func(childComplexity int) int
+		Title       func(childComplexity int) int
+	}
+
+	Certificate struct {
+		Date   func(childComplexity int) int
+		Issuer func(childComplexity int) int
+		Link   func(childComplexity int) int
+		Name   func(childComplexity int) int
+	}
+
 	Education struct {
 		Degree         func(childComplexity int) int
 		GraduationDate func(childComplexity int) int
@@ -67,23 +79,63 @@ type ComplexityRoot struct {
 		Title       func(childComplexity int) int
 	}
 
+	Language struct {
+		Language    func(childComplexity int) int
+		Proficiency func(childComplexity int) int
+	}
+
 	Mutation struct {
+		DeleteResume   func(childComplexity int, id string) int
+		SaveResume     func(childComplexity int, input model.SaveResumeInput) int
 		TailorResume   func(childComplexity int, input model.TailorResumeInput) int
 		ValidateResume func(childComplexity int, input model.ValidateResumeInput) int
 	}
 
+	Project struct {
+		Date        func(childComplexity int) int
+		Description func(childComplexity int) int
+		Location    func(childComplexity int) int
+		TechStack   func(childComplexity int) int
+		Title       func(childComplexity int) int
+	}
+
 	Query struct {
-		Health func(childComplexity int) int
+		Health      func(childComplexity int) int
+		ListResumes func(childComplexity int, filter *model.ListResumesFilter) int
 	}
 
 	ResumeData struct {
-		Education  func(childComplexity int) int
-		Email      func(childComplexity int) int
-		Experience func(childComplexity int) int
-		FullName   func(childComplexity int) int
-		Phone      func(childComplexity int) int
-		Skills     func(childComplexity int) int
-		Summary    func(childComplexity int) int
+		Achievements func(childComplexity int) int
+		Certificates func(childComplexity int) int
+		Education    func(childComplexity int) int
+		Email        func(childComplexity int) int
+		Experience   func(childComplexity int) int
+		FullName     func(childComplexity int) int
+		Github       func(childComplexity int) int
+		JobTitle     func(childComplexity int) int
+		Languages    func(childComplexity int) int
+		Linkedin     func(childComplexity int) int
+		Location     func(childComplexity int) int
+		Phone        func(childComplexity int) int
+		ProfileImage func(childComplexity int) int
+		Projects     func(childComplexity int) int
+		SkillGroups  func(childComplexity int) int
+		Skills       func(childComplexity int) int
+		Summary      func(childComplexity int) int
+		Website      func(childComplexity int) int
+	}
+
+	SavedResume struct {
+		CreatedAt func(childComplexity int) int
+		ID        func(childComplexity int) int
+		Resume    func(childComplexity int) int
+		Tags      func(childComplexity int) int
+		Version   func(childComplexity int) int
+	}
+
+	SkillGroup struct {
+		Category func(childComplexity int) int
+		Items    func(childComplexity int) int
 	}
 
 	TailorResponse struct {
@@ -95,9 +147,12 @@ type ComplexityRoot struct {
 type MutationResolver interface {
 	TailorResume(ctx context.Context, input model.TailorResumeInput) (*model.TailorResponse, error)
 	ValidateResume(ctx context.Context, input model.ValidateResumeInput) (*model.ATSScore, error)
+	SaveResume(ctx context.Context, input model.SaveResumeInput) (*model.SavedResume, error)
+	DeleteResume(ctx context.Context, id string) (bool, error)
 }
 type QueryResolver interface {
 	Health(ctx context.Context) (string, error)
+	ListResumes(ctx context.Context, filter *model.ListResumesFilter) ([]*model.SavedResume, error)
 }
 
 type executableSchema struct {
@@ -137,6 +192,44 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.ATSScore.Score(childComplexity), true
+
+	case "Achievement.description":
+		if e.complexity.Achievement.Description == nil {
+			break
+		}
+
+		return e.complexity.Achievement.Description(childComplexity), true
+	case "Achievement.title":
+		if e.complexity.Achievement.Title == nil {
+			break
+		}
+
+		return e.complexity.Achievement.Title(childComplexity), true
+
+	case "Certificate.date":
+		if e.complexity.Certificate.Date == nil {
+			break
+		}
+
+		return e.complexity.Certificate.Date(childComplexity), true
+	case "Certificate.issuer":
+		if e.complexity.Certificate.Issuer == nil {
+			break
+		}
+
+		return e.complexity.Certificate.Issuer(childComplexity), true
+	case "Certificate.link":
+		if e.complexity.Certificate.Link == nil {
+			break
+		}
+
+		return e.complexity.Certificate.Link(childComplexity), true
+	case "Certificate.name":
+		if e.complexity.Certificate.Name == nil {
+			break
+		}
+
+		return e.complexity.Certificate.Name(childComplexity), true
 
 	case "Education.degree":
 		if e.complexity.Education.Degree == nil {
@@ -188,6 +281,41 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Experience.Title(childComplexity), true
 
+	case "Language.language":
+		if e.complexity.Language.Language == nil {
+			break
+		}
+
+		return e.complexity.Language.Language(childComplexity), true
+	case "Language.proficiency":
+		if e.complexity.Language.Proficiency == nil {
+			break
+		}
+
+		return e.complexity.Language.Proficiency(childComplexity), true
+
+	case "Mutation.deleteResume":
+		if e.complexity.Mutation.DeleteResume == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteResume_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteResume(childComplexity, args["id"].(string)), true
+	case "Mutation.saveResume":
+		if e.complexity.Mutation.SaveResume == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_saveResume_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SaveResume(childComplexity, args["input"].(model.SaveResumeInput)), true
 	case "Mutation.tailorResume":
 		if e.complexity.Mutation.TailorResume == nil {
 			break
@@ -211,13 +339,67 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Mutation.ValidateResume(childComplexity, args["input"].(model.ValidateResumeInput)), true
 
+	case "Project.date":
+		if e.complexity.Project.Date == nil {
+			break
+		}
+
+		return e.complexity.Project.Date(childComplexity), true
+	case "Project.description":
+		if e.complexity.Project.Description == nil {
+			break
+		}
+
+		return e.complexity.Project.Description(childComplexity), true
+	case "Project.location":
+		if e.complexity.Project.Location == nil {
+			break
+		}
+
+		return e.complexity.Project.Location(childComplexity), true
+	case "Project.techStack":
+		if e.complexity.Project.TechStack == nil {
+			break
+		}
+
+		return e.complexity.Project.TechStack(childComplexity), true
+	case "Project.title":
+		if e.complexity.Project.Title == nil {
+			break
+		}
+
+		return e.complexity.Project.Title(childComplexity), true
+
 	case "Query.health":
 		if e.complexity.Query.Health == nil {
 			break
 		}
 
 		return e.complexity.Query.Health(childComplexity), true
+	case "Query.listResumes":
+		if e.complexity.Query.ListResumes == nil {
+			break
+		}
 
+		args, err := ec.field_Query_listResumes_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.ListResumes(childComplexity, args["filter"].(*model.ListResumesFilter)), true
+
+	case "ResumeData.achievements":
+		if e.complexity.ResumeData.Achievements == nil {
+			break
+		}
+
+		return e.complexity.ResumeData.Achievements(childComplexity), true
+	case "ResumeData.certificates":
+		if e.complexity.ResumeData.Certificates == nil {
+			break
+		}
+
+		return e.complexity.ResumeData.Certificates(childComplexity), true
 	case "ResumeData.education":
 		if e.complexity.ResumeData.Education == nil {
 			break
@@ -242,12 +424,60 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.ResumeData.FullName(childComplexity), true
+	case "ResumeData.github":
+		if e.complexity.ResumeData.Github == nil {
+			break
+		}
+
+		return e.complexity.ResumeData.Github(childComplexity), true
+	case "ResumeData.jobTitle":
+		if e.complexity.ResumeData.JobTitle == nil {
+			break
+		}
+
+		return e.complexity.ResumeData.JobTitle(childComplexity), true
+	case "ResumeData.languages":
+		if e.complexity.ResumeData.Languages == nil {
+			break
+		}
+
+		return e.complexity.ResumeData.Languages(childComplexity), true
+	case "ResumeData.linkedin":
+		if e.complexity.ResumeData.Linkedin == nil {
+			break
+		}
+
+		return e.complexity.ResumeData.Linkedin(childComplexity), true
+	case "ResumeData.location":
+		if e.complexity.ResumeData.Location == nil {
+			break
+		}
+
+		return e.complexity.ResumeData.Location(childComplexity), true
 	case "ResumeData.phone":
 		if e.complexity.ResumeData.Phone == nil {
 			break
 		}
 
 		return e.complexity.ResumeData.Phone(childComplexity), true
+	case "ResumeData.profileImage":
+		if e.complexity.ResumeData.ProfileImage == nil {
+			break
+		}
+
+		return e.complexity.ResumeData.ProfileImage(childComplexity), true
+	case "ResumeData.projects":
+		if e.complexity.ResumeData.Projects == nil {
+			break
+		}
+
+		return e.complexity.ResumeData.Projects(childComplexity), true
+	case "ResumeData.skillGroups":
+		if e.complexity.ResumeData.SkillGroups == nil {
+			break
+		}
+
+		return e.complexity.ResumeData.SkillGroups(childComplexity), true
 	case "ResumeData.skills":
 		if e.complexity.ResumeData.Skills == nil {
 			break
@@ -260,6 +490,56 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.ResumeData.Summary(childComplexity), true
+	case "ResumeData.website":
+		if e.complexity.ResumeData.Website == nil {
+			break
+		}
+
+		return e.complexity.ResumeData.Website(childComplexity), true
+
+	case "SavedResume.createdAt":
+		if e.complexity.SavedResume.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.SavedResume.CreatedAt(childComplexity), true
+	case "SavedResume.id":
+		if e.complexity.SavedResume.ID == nil {
+			break
+		}
+
+		return e.complexity.SavedResume.ID(childComplexity), true
+	case "SavedResume.resume":
+		if e.complexity.SavedResume.Resume == nil {
+			break
+		}
+
+		return e.complexity.SavedResume.Resume(childComplexity), true
+	case "SavedResume.tags":
+		if e.complexity.SavedResume.Tags == nil {
+			break
+		}
+
+		return e.complexity.SavedResume.Tags(childComplexity), true
+	case "SavedResume.version":
+		if e.complexity.SavedResume.Version == nil {
+			break
+		}
+
+		return e.complexity.SavedResume.Version(childComplexity), true
+
+	case "SkillGroup.category":
+		if e.complexity.SkillGroup.Category == nil {
+			break
+		}
+
+		return e.complexity.SkillGroup.Category(childComplexity), true
+	case "SkillGroup.items":
+		if e.complexity.SkillGroup.Items == nil {
+			break
+		}
+
+		return e.complexity.SkillGroup.Items(childComplexity), true
 
 	case "TailorResponse.coverLetter":
 		if e.complexity.TailorResponse.CoverLetter == nil {
@@ -282,9 +562,16 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	opCtx := graphql.GetOperationContext(ctx)
 	ec := executionContext{opCtx, e, 0, 0, make(chan graphql.DeferredResult)}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
+		ec.unmarshalInputAchievementInput,
+		ec.unmarshalInputCertificateInput,
 		ec.unmarshalInputEducationInput,
 		ec.unmarshalInputExperienceInput,
+		ec.unmarshalInputLanguageInput,
+		ec.unmarshalInputListResumesFilter,
+		ec.unmarshalInputProjectInput,
 		ec.unmarshalInputResumeInput,
+		ec.unmarshalInputSaveResumeInput,
+		ec.unmarshalInputSkillGroupInput,
 		ec.unmarshalInputTailorResumeInput,
 		ec.unmarshalInputValidateResumeInput,
 	)
@@ -403,6 +690,28 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
+func (ec *executionContext) field_Mutation_deleteResume_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNID2string)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_saveResume_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNSaveResumeInput2githubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐSaveResumeInput)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_tailorResume_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -433,6 +742,17 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		return nil, err
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_listResumes_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "filter", ec.unmarshalOListResumesFilter2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐListResumesFilter)
+	if err != nil {
+		return nil, err
+	}
+	args["filter"] = arg0
 	return args, nil
 }
 
@@ -565,6 +885,180 @@ func (ec *executionContext) _ATSScore_missingKeywords(ctx context.Context, field
 func (ec *executionContext) fieldContext_ATSScore_missingKeywords(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "ATSScore",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Achievement_title(ctx context.Context, field graphql.CollectedField, obj *model.Achievement) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Achievement_title,
+		func(ctx context.Context) (any, error) {
+			return obj.Title, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Achievement_title(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Achievement",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Achievement_description(ctx context.Context, field graphql.CollectedField, obj *model.Achievement) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Achievement_description,
+		func(ctx context.Context) (any, error) {
+			return obj.Description, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Achievement_description(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Achievement",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Certificate_name(ctx context.Context, field graphql.CollectedField, obj *model.Certificate) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Certificate_name,
+		func(ctx context.Context) (any, error) {
+			return obj.Name, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Certificate_name(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Certificate",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Certificate_issuer(ctx context.Context, field graphql.CollectedField, obj *model.Certificate) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Certificate_issuer,
+		func(ctx context.Context) (any, error) {
+			return obj.Issuer, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Certificate_issuer(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Certificate",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Certificate_date(ctx context.Context, field graphql.CollectedField, obj *model.Certificate) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Certificate_date,
+		func(ctx context.Context) (any, error) {
+			return obj.Date, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_Certificate_date(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Certificate",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Certificate_link(ctx context.Context, field graphql.CollectedField, obj *model.Certificate) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Certificate_link,
+		func(ctx context.Context) (any, error) {
+			return obj.Link, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_Certificate_link(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Certificate",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -807,6 +1301,64 @@ func (ec *executionContext) fieldContext_Experience_description(_ context.Contex
 	return fc, nil
 }
 
+func (ec *executionContext) _Language_language(ctx context.Context, field graphql.CollectedField, obj *model.Language) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Language_language,
+		func(ctx context.Context) (any, error) {
+			return obj.Language, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Language_language(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Language",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Language_proficiency(ctx context.Context, field graphql.CollectedField, obj *model.Language) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Language_proficiency,
+		func(ctx context.Context) (any, error) {
+			return obj.Proficiency, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Language_proficiency(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Language",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_tailorResume(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -903,6 +1455,245 @@ func (ec *executionContext) fieldContext_Mutation_validateResume(ctx context.Con
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_saveResume(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Mutation_saveResume,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.resolvers.Mutation().SaveResume(ctx, fc.Args["input"].(model.SaveResumeInput))
+		},
+		nil,
+		ec.marshalNSavedResume2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐSavedResume,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Mutation_saveResume(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_SavedResume_id(ctx, field)
+			case "resume":
+				return ec.fieldContext_SavedResume_resume(ctx, field)
+			case "tags":
+				return ec.fieldContext_SavedResume_tags(ctx, field)
+			case "version":
+				return ec.fieldContext_SavedResume_version(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SavedResume_createdAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SavedResume", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_saveResume_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_deleteResume(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Mutation_deleteResume,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.resolvers.Mutation().DeleteResume(ctx, fc.Args["id"].(string))
+		},
+		nil,
+		ec.marshalNBoolean2bool,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Mutation_deleteResume(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_deleteResume_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Project_title(ctx context.Context, field graphql.CollectedField, obj *model.Project) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Project_title,
+		func(ctx context.Context) (any, error) {
+			return obj.Title, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Project_title(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Project",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Project_description(ctx context.Context, field graphql.CollectedField, obj *model.Project) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Project_description,
+		func(ctx context.Context) (any, error) {
+			return obj.Description, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Project_description(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Project",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Project_techStack(ctx context.Context, field graphql.CollectedField, obj *model.Project) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Project_techStack,
+		func(ctx context.Context) (any, error) {
+			return obj.TechStack, nil
+		},
+		nil,
+		ec.marshalNString2ᚕstringᚄ,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Project_techStack(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Project",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Project_date(ctx context.Context, field graphql.CollectedField, obj *model.Project) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Project_date,
+		func(ctx context.Context) (any, error) {
+			return obj.Date, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_Project_date(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Project",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Project_location(ctx context.Context, field graphql.CollectedField, obj *model.Project) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Project_location,
+		func(ctx context.Context) (any, error) {
+			return obj.Location, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_Project_location(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Project",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query_health(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -928,6 +1719,59 @@ func (ec *executionContext) fieldContext_Query_health(_ context.Context, field g
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
 		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_listResumes(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Query_listResumes,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.resolvers.Query().ListResumes(ctx, fc.Args["filter"].(*model.ListResumesFilter))
+		},
+		nil,
+		ec.marshalNSavedResume2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐSavedResumeᚄ,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Query_listResumes(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_SavedResume_id(ctx, field)
+			case "resume":
+				return ec.fieldContext_SavedResume_resume(ctx, field)
+			case "tags":
+				return ec.fieldContext_SavedResume_tags(ctx, field)
+			case "version":
+				return ec.fieldContext_SavedResume_version(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SavedResume_createdAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SavedResume", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_listResumes_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
 	}
 	return fc, nil
 }
@@ -1263,6 +2107,606 @@ func (ec *executionContext) fieldContext_ResumeData_education(_ context.Context,
 	return fc, nil
 }
 
+func (ec *executionContext) _ResumeData_projects(ctx context.Context, field graphql.CollectedField, obj *model.ResumeData) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ResumeData_projects,
+		func(ctx context.Context) (any, error) {
+			return obj.Projects, nil
+		},
+		nil,
+		ec.marshalNProject2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐProjectᚄ,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_ResumeData_projects(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ResumeData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "title":
+				return ec.fieldContext_Project_title(ctx, field)
+			case "description":
+				return ec.fieldContext_Project_description(ctx, field)
+			case "techStack":
+				return ec.fieldContext_Project_techStack(ctx, field)
+			case "date":
+				return ec.fieldContext_Project_date(ctx, field)
+			case "location":
+				return ec.fieldContext_Project_location(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Project", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ResumeData_certificates(ctx context.Context, field graphql.CollectedField, obj *model.ResumeData) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ResumeData_certificates,
+		func(ctx context.Context) (any, error) {
+			return obj.Certificates, nil
+		},
+		nil,
+		ec.marshalNCertificate2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐCertificateᚄ,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_ResumeData_certificates(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ResumeData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "name":
+				return ec.fieldContext_Certificate_name(ctx, field)
+			case "issuer":
+				return ec.fieldContext_Certificate_issuer(ctx, field)
+			case "date":
+				return ec.fieldContext_Certificate_date(ctx, field)
+			case "link":
+				return ec.fieldContext_Certificate_link(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Certificate", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ResumeData_jobTitle(ctx context.Context, field graphql.CollectedField, obj *model.ResumeData) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ResumeData_jobTitle,
+		func(ctx context.Context) (any, error) {
+			return obj.JobTitle, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_ResumeData_jobTitle(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ResumeData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ResumeData_location(ctx context.Context, field graphql.CollectedField, obj *model.ResumeData) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ResumeData_location,
+		func(ctx context.Context) (any, error) {
+			return obj.Location, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_ResumeData_location(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ResumeData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ResumeData_linkedin(ctx context.Context, field graphql.CollectedField, obj *model.ResumeData) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ResumeData_linkedin,
+		func(ctx context.Context) (any, error) {
+			return obj.Linkedin, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_ResumeData_linkedin(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ResumeData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ResumeData_github(ctx context.Context, field graphql.CollectedField, obj *model.ResumeData) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ResumeData_github,
+		func(ctx context.Context) (any, error) {
+			return obj.Github, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_ResumeData_github(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ResumeData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ResumeData_website(ctx context.Context, field graphql.CollectedField, obj *model.ResumeData) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ResumeData_website,
+		func(ctx context.Context) (any, error) {
+			return obj.Website, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_ResumeData_website(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ResumeData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ResumeData_profileImage(ctx context.Context, field graphql.CollectedField, obj *model.ResumeData) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ResumeData_profileImage,
+		func(ctx context.Context) (any, error) {
+			return obj.ProfileImage, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_ResumeData_profileImage(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ResumeData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ResumeData_skillGroups(ctx context.Context, field graphql.CollectedField, obj *model.ResumeData) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ResumeData_skillGroups,
+		func(ctx context.Context) (any, error) {
+			return obj.SkillGroups, nil
+		},
+		nil,
+		ec.marshalOSkillGroup2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐSkillGroupᚄ,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_ResumeData_skillGroups(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ResumeData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "category":
+				return ec.fieldContext_SkillGroup_category(ctx, field)
+			case "items":
+				return ec.fieldContext_SkillGroup_items(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SkillGroup", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ResumeData_languages(ctx context.Context, field graphql.CollectedField, obj *model.ResumeData) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ResumeData_languages,
+		func(ctx context.Context) (any, error) {
+			return obj.Languages, nil
+		},
+		nil,
+		ec.marshalOLanguage2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐLanguageᚄ,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_ResumeData_languages(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ResumeData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "language":
+				return ec.fieldContext_Language_language(ctx, field)
+			case "proficiency":
+				return ec.fieldContext_Language_proficiency(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Language", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ResumeData_achievements(ctx context.Context, field graphql.CollectedField, obj *model.ResumeData) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ResumeData_achievements,
+		func(ctx context.Context) (any, error) {
+			return obj.Achievements, nil
+		},
+		nil,
+		ec.marshalOAchievement2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐAchievementᚄ,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_ResumeData_achievements(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ResumeData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "title":
+				return ec.fieldContext_Achievement_title(ctx, field)
+			case "description":
+				return ec.fieldContext_Achievement_description(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Achievement", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SavedResume_id(ctx context.Context, field graphql.CollectedField, obj *model.SavedResume) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SavedResume_id,
+		func(ctx context.Context) (any, error) {
+			return obj.ID, nil
+		},
+		nil,
+		ec.marshalNID2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_SavedResume_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SavedResume",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SavedResume_resume(ctx context.Context, field graphql.CollectedField, obj *model.SavedResume) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SavedResume_resume,
+		func(ctx context.Context) (any, error) {
+			return obj.Resume, nil
+		},
+		nil,
+		ec.marshalNResumeData2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐResumeData,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_SavedResume_resume(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SavedResume",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "fullName":
+				return ec.fieldContext_ResumeData_fullName(ctx, field)
+			case "email":
+				return ec.fieldContext_ResumeData_email(ctx, field)
+			case "phone":
+				return ec.fieldContext_ResumeData_phone(ctx, field)
+			case "summary":
+				return ec.fieldContext_ResumeData_summary(ctx, field)
+			case "skills":
+				return ec.fieldContext_ResumeData_skills(ctx, field)
+			case "experience":
+				return ec.fieldContext_ResumeData_experience(ctx, field)
+			case "education":
+				return ec.fieldContext_ResumeData_education(ctx, field)
+			case "projects":
+				return ec.fieldContext_ResumeData_projects(ctx, field)
+			case "certificates":
+				return ec.fieldContext_ResumeData_certificates(ctx, field)
+			case "jobTitle":
+				return ec.fieldContext_ResumeData_jobTitle(ctx, field)
+			case "location":
+				return ec.fieldContext_ResumeData_location(ctx, field)
+			case "linkedin":
+				return ec.fieldContext_ResumeData_linkedin(ctx, field)
+			case "github":
+				return ec.fieldContext_ResumeData_github(ctx, field)
+			case "website":
+				return ec.fieldContext_ResumeData_website(ctx, field)
+			case "profileImage":
+				return ec.fieldContext_ResumeData_profileImage(ctx, field)
+			case "skillGroups":
+				return ec.fieldContext_ResumeData_skillGroups(ctx, field)
+			case "languages":
+				return ec.fieldContext_ResumeData_languages(ctx, field)
+			case "achievements":
+				return ec.fieldContext_ResumeData_achievements(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ResumeData", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SavedResume_tags(ctx context.Context, field graphql.CollectedField, obj *model.SavedResume) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SavedResume_tags,
+		func(ctx context.Context) (any, error) {
+			return obj.Tags, nil
+		},
+		nil,
+		ec.marshalNString2ᚕstringᚄ,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_SavedResume_tags(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SavedResume",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SavedResume_version(ctx context.Context, field graphql.CollectedField, obj *model.SavedResume) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SavedResume_version,
+		func(ctx context.Context) (any, error) {
+			return obj.Version, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_SavedResume_version(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SavedResume",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SavedResume_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.SavedResume) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SavedResume_createdAt,
+		func(ctx context.Context) (any, error) {
+			return obj.CreatedAt, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_SavedResume_createdAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SavedResume",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SkillGroup_category(ctx context.Context, field graphql.CollectedField, obj *model.SkillGroup) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SkillGroup_category,
+		func(ctx context.Context) (any, error) {
+			return obj.Category, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_SkillGroup_category(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SkillGroup",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SkillGroup_items(ctx context.Context, field graphql.CollectedField, obj *model.SkillGroup) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SkillGroup_items,
+		func(ctx context.Context) (any, error) {
+			return obj.Items, nil
+		},
+		nil,
+		ec.marshalNString2ᚕstringᚄ,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_SkillGroup_items(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SkillGroup",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _TailorResponse_tailoredResume(ctx context.Context, field graphql.CollectedField, obj *model.TailorResponse) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -1301,6 +2745,28 @@ func (ec *executionContext) fieldContext_TailorResponse_tailoredResume(_ context
 				return ec.fieldContext_ResumeData_experience(ctx, field)
 			case "education":
 				return ec.fieldContext_ResumeData_education(ctx, field)
+			case "projects":
+				return ec.fieldContext_ResumeData_projects(ctx, field)
+			case "certificates":
+				return ec.fieldContext_ResumeData_certificates(ctx, field)
+			case "jobTitle":
+				return ec.fieldContext_ResumeData_jobTitle(ctx, field)
+			case "location":
+				return ec.fieldContext_ResumeData_location(ctx, field)
+			case "linkedin":
+				return ec.fieldContext_ResumeData_linkedin(ctx, field)
+			case "github":
+				return ec.fieldContext_ResumeData_github(ctx, field)
+			case "website":
+				return ec.fieldContext_ResumeData_website(ctx, field)
+			case "profileImage":
+				return ec.fieldContext_ResumeData_profileImage(ctx, field)
+			case "skillGroups":
+				return ec.fieldContext_ResumeData_skillGroups(ctx, field)
+			case "languages":
+				return ec.fieldContext_ResumeData_languages(ctx, field)
+			case "achievements":
+				return ec.fieldContext_ResumeData_achievements(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type ResumeData", field.Name)
 		},
@@ -2783,6 +4249,88 @@ func (ec *executionContext) fieldContext___Type_isOneOf(_ context.Context, field
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputAchievementInput(ctx context.Context, obj any) (model.AchievementInput, error) {
+	var it model.AchievementInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"title", "description"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "title":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Title = data
+		case "description":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Description = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputCertificateInput(ctx context.Context, obj any) (model.CertificateInput, error) {
+	var it model.CertificateInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"name", "issuer", "date", "link"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "name":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Name = data
+		case "issuer":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("issuer"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Issuer = data
+		case "date":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("date"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Date = data
+		case "link":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("link"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Link = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputEducationInput(ctx context.Context, obj any) (model.EducationInput, error) {
 	var it model.EducationInput
 	asMap := map[string]any{}
@@ -2879,6 +4427,122 @@ func (ec *executionContext) unmarshalInputExperienceInput(ctx context.Context, o
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputLanguageInput(ctx context.Context, obj any) (model.LanguageInput, error) {
+	var it model.LanguageInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"language", "proficiency"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "language":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Language = data
+		case "proficiency":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("proficiency"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Proficiency = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputListResumesFilter(ctx context.Context, obj any) (model.ListResumesFilter, error) {
+	var it model.ListResumesFilter
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"tags"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "tags":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tags"))
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Tags = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputProjectInput(ctx context.Context, obj any) (model.ProjectInput, error) {
+	var it model.ProjectInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"title", "description", "techStack", "date", "location"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "title":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Title = data
+		case "description":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Description = data
+		case "techStack":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("techStack"))
+			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.TechStack = data
+		case "date":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("date"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Date = data
+		case "location":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("location"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Location = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputResumeInput(ctx context.Context, obj any) (model.ResumeInput, error) {
 	var it model.ResumeInput
 	asMap := map[string]any{}
@@ -2886,7 +4550,7 @@ func (ec *executionContext) unmarshalInputResumeInput(ctx context.Context, obj a
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"fullName", "email", "phone", "summary", "skills", "experience", "education"}
+	fieldsInOrder := [...]string{"fullName", "email", "phone", "summary", "skills", "experience", "education", "projects", "certificates", "jobTitle", "location", "linkedin", "github", "website", "profileImage", "skillGroups", "languages", "achievements"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -2942,6 +4606,158 @@ func (ec *executionContext) unmarshalInputResumeInput(ctx context.Context, obj a
 				return it, err
 			}
 			it.Education = data
+		case "projects":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("projects"))
+			data, err := ec.unmarshalNProjectInput2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐProjectInputᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Projects = data
+		case "certificates":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("certificates"))
+			data, err := ec.unmarshalNCertificateInput2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐCertificateInputᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Certificates = data
+		case "jobTitle":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("jobTitle"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.JobTitle = data
+		case "location":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("location"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Location = data
+		case "linkedin":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("linkedin"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Linkedin = data
+		case "github":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("github"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Github = data
+		case "website":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("website"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Website = data
+		case "profileImage":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("profileImage"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ProfileImage = data
+		case "skillGroups":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("skillGroups"))
+			data, err := ec.unmarshalOSkillGroupInput2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐSkillGroupInputᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SkillGroups = data
+		case "languages":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("languages"))
+			data, err := ec.unmarshalOLanguageInput2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐLanguageInputᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Languages = data
+		case "achievements":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("achievements"))
+			data, err := ec.unmarshalOAchievementInput2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐAchievementInputᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Achievements = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSaveResumeInput(ctx context.Context, obj any) (model.SaveResumeInput, error) {
+	var it model.SaveResumeInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"resume", "tags", "version"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "resume":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("resume"))
+			data, err := ec.unmarshalNResumeInput2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐResumeInput(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Resume = data
+		case "tags":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tags"))
+			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Tags = data
+		case "version":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("version"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Version = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSkillGroupInput(ctx context.Context, obj any) (model.SkillGroupInput, error) {
+	var it model.SkillGroupInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"category", "items"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "category":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("category"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Category = data
+		case "items":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("items"))
+			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Items = data
 		}
 	}
 
@@ -3073,6 +4889,98 @@ func (ec *executionContext) _ATSScore(ctx context.Context, sel ast.SelectionSet,
 	return out
 }
 
+var achievementImplementors = []string{"Achievement"}
+
+func (ec *executionContext) _Achievement(ctx context.Context, sel ast.SelectionSet, obj *model.Achievement) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, achievementImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Achievement")
+		case "title":
+			out.Values[i] = ec._Achievement_title(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "description":
+			out.Values[i] = ec._Achievement_description(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var certificateImplementors = []string{"Certificate"}
+
+func (ec *executionContext) _Certificate(ctx context.Context, sel ast.SelectionSet, obj *model.Certificate) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, certificateImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Certificate")
+		case "name":
+			out.Values[i] = ec._Certificate_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "issuer":
+			out.Values[i] = ec._Certificate_issuer(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "date":
+			out.Values[i] = ec._Certificate_date(ctx, field, obj)
+		case "link":
+			out.Values[i] = ec._Certificate_link(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var educationImplementors = []string{"Education"}
 
 func (ec *executionContext) _Education(ctx context.Context, sel ast.SelectionSet, obj *model.Education) graphql.Marshaler {
@@ -3169,6 +5077,50 @@ func (ec *executionContext) _Experience(ctx context.Context, sel ast.SelectionSe
 	return out
 }
 
+var languageImplementors = []string{"Language"}
+
+func (ec *executionContext) _Language(ctx context.Context, sel ast.SelectionSet, obj *model.Language) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, languageImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Language")
+		case "language":
+			out.Values[i] = ec._Language_language(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "proficiency":
+			out.Values[i] = ec._Language_proficiency(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var mutationImplementors = []string{"Mutation"}
 
 func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -3202,6 +5154,73 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "saveResume":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_saveResume(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "deleteResume":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deleteResume(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var projectImplementors = []string{"Project"}
+
+func (ec *executionContext) _Project(ctx context.Context, sel ast.SelectionSet, obj *model.Project) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, projectImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Project")
+		case "title":
+			out.Values[i] = ec._Project_title(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "description":
+			out.Values[i] = ec._Project_description(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "techStack":
+			out.Values[i] = ec._Project_techStack(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "date":
+			out.Values[i] = ec._Project_date(ctx, field, obj)
+		case "location":
+			out.Values[i] = ec._Project_location(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3254,6 +5273,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_health(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "listResumes":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_listResumes(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -3334,6 +5375,137 @@ func (ec *executionContext) _ResumeData(ctx context.Context, sel ast.SelectionSe
 			}
 		case "education":
 			out.Values[i] = ec._ResumeData_education(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "projects":
+			out.Values[i] = ec._ResumeData_projects(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "certificates":
+			out.Values[i] = ec._ResumeData_certificates(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "jobTitle":
+			out.Values[i] = ec._ResumeData_jobTitle(ctx, field, obj)
+		case "location":
+			out.Values[i] = ec._ResumeData_location(ctx, field, obj)
+		case "linkedin":
+			out.Values[i] = ec._ResumeData_linkedin(ctx, field, obj)
+		case "github":
+			out.Values[i] = ec._ResumeData_github(ctx, field, obj)
+		case "website":
+			out.Values[i] = ec._ResumeData_website(ctx, field, obj)
+		case "profileImage":
+			out.Values[i] = ec._ResumeData_profileImage(ctx, field, obj)
+		case "skillGroups":
+			out.Values[i] = ec._ResumeData_skillGroups(ctx, field, obj)
+		case "languages":
+			out.Values[i] = ec._ResumeData_languages(ctx, field, obj)
+		case "achievements":
+			out.Values[i] = ec._ResumeData_achievements(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var savedResumeImplementors = []string{"SavedResume"}
+
+func (ec *executionContext) _SavedResume(ctx context.Context, sel ast.SelectionSet, obj *model.SavedResume) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, savedResumeImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SavedResume")
+		case "id":
+			out.Values[i] = ec._SavedResume_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "resume":
+			out.Values[i] = ec._SavedResume_resume(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "tags":
+			out.Values[i] = ec._SavedResume_tags(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "version":
+			out.Values[i] = ec._SavedResume_version(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "createdAt":
+			out.Values[i] = ec._SavedResume_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var skillGroupImplementors = []string{"SkillGroup"}
+
+func (ec *executionContext) _SkillGroup(ctx context.Context, sel ast.SelectionSet, obj *model.SkillGroup) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, skillGroupImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SkillGroup")
+		case "category":
+			out.Values[i] = ec._SkillGroup_category(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "items":
+			out.Values[i] = ec._SkillGroup_items(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -3750,6 +5922,21 @@ func (ec *executionContext) marshalNATSScore2ᚖgithubᚗcomᚋiprotoresumeᚋga
 	return ec._ATSScore(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNAchievement2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐAchievement(ctx context.Context, sel ast.SelectionSet, v *model.Achievement) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Achievement(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNAchievementInput2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐAchievementInput(ctx context.Context, v any) (*model.AchievementInput, error) {
+	res, err := ec.unmarshalInputAchievementInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v any) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -3764,6 +5951,80 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNCertificate2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐCertificateᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Certificate) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCertificate2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐCertificate(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNCertificate2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐCertificate(ctx context.Context, sel ast.SelectionSet, v *model.Certificate) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Certificate(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNCertificateInput2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐCertificateInputᚄ(ctx context.Context, v any) ([]*model.CertificateInput, error) {
+	var vSlice []any
+	vSlice = graphql.CoerceList(v)
+	var err error
+	res := make([]*model.CertificateInput, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNCertificateInput2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐCertificateInput(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) unmarshalNCertificateInput2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐCertificateInput(ctx context.Context, v any) (*model.CertificateInput, error) {
+	res, err := ec.unmarshalInputCertificateInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNEducation2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐEducationᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Education) graphql.Marshaler {
@@ -3914,6 +6175,22 @@ func (ec *executionContext) unmarshalNExperienceInput2ᚖgithubᚗcomᚋiprotore
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNID2string(ctx context.Context, v any) (string, error) {
+	res, err := graphql.UnmarshalID(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
+	_ = sel
+	res := graphql.MarshalID(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
 func (ec *executionContext) unmarshalNInt2int32(ctx context.Context, v any) (int32, error) {
 	res, err := graphql.UnmarshalInt32(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -3930,6 +6207,95 @@ func (ec *executionContext) marshalNInt2int32(ctx context.Context, sel ast.Selec
 	return res
 }
 
+func (ec *executionContext) marshalNLanguage2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐLanguage(ctx context.Context, sel ast.SelectionSet, v *model.Language) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Language(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNLanguageInput2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐLanguageInput(ctx context.Context, v any) (*model.LanguageInput, error) {
+	res, err := ec.unmarshalInputLanguageInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNProject2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐProjectᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Project) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNProject2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐProject(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNProject2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐProject(ctx context.Context, sel ast.SelectionSet, v *model.Project) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Project(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNProjectInput2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐProjectInputᚄ(ctx context.Context, v any) ([]*model.ProjectInput, error) {
+	var vSlice []any
+	vSlice = graphql.CoerceList(v)
+	var err error
+	res := make([]*model.ProjectInput, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNProjectInput2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐProjectInput(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) unmarshalNProjectInput2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐProjectInput(ctx context.Context, v any) (*model.ProjectInput, error) {
+	res, err := ec.unmarshalInputProjectInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNResumeData2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐResumeData(ctx context.Context, sel ast.SelectionSet, v *model.ResumeData) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -3942,6 +6308,84 @@ func (ec *executionContext) marshalNResumeData2ᚖgithubᚗcomᚋiprotoresumeᚋ
 
 func (ec *executionContext) unmarshalNResumeInput2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐResumeInput(ctx context.Context, v any) (*model.ResumeInput, error) {
 	res, err := ec.unmarshalInputResumeInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNSaveResumeInput2githubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐSaveResumeInput(ctx context.Context, v any) (model.SaveResumeInput, error) {
+	res, err := ec.unmarshalInputSaveResumeInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSavedResume2githubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐSavedResume(ctx context.Context, sel ast.SelectionSet, v model.SavedResume) graphql.Marshaler {
+	return ec._SavedResume(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSavedResume2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐSavedResumeᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.SavedResume) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNSavedResume2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐSavedResume(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNSavedResume2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐSavedResume(ctx context.Context, sel ast.SelectionSet, v *model.SavedResume) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._SavedResume(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNSkillGroup2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐSkillGroup(ctx context.Context, sel ast.SelectionSet, v *model.SkillGroup) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._SkillGroup(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNSkillGroupInput2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐSkillGroupInput(ctx context.Context, v any) (*model.SkillGroupInput, error) {
+	res, err := ec.unmarshalInputSkillGroupInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -4268,6 +6712,71 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
+func (ec *executionContext) marshalOAchievement2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐAchievementᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Achievement) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNAchievement2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐAchievement(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) unmarshalOAchievementInput2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐAchievementInputᚄ(ctx context.Context, v any) ([]*model.AchievementInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []any
+	vSlice = graphql.CoerceList(v)
+	var err error
+	res := make([]*model.AchievementInput, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNAchievementInput2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐAchievementInput(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v any) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -4296,6 +6805,180 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	_ = ctx
 	res := graphql.MarshalBoolean(*v)
 	return res
+}
+
+func (ec *executionContext) marshalOLanguage2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐLanguageᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Language) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNLanguage2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐLanguage(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) unmarshalOLanguageInput2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐLanguageInputᚄ(ctx context.Context, v any) ([]*model.LanguageInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []any
+	vSlice = graphql.CoerceList(v)
+	var err error
+	res := make([]*model.LanguageInput, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNLanguageInput2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐLanguageInput(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) unmarshalOListResumesFilter2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐListResumesFilter(ctx context.Context, v any) (*model.ListResumesFilter, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputListResumesFilter(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOSkillGroup2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐSkillGroupᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.SkillGroup) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNSkillGroup2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐSkillGroup(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) unmarshalOSkillGroupInput2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐSkillGroupInputᚄ(ctx context.Context, v any) ([]*model.SkillGroupInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []any
+	vSlice = graphql.CoerceList(v)
+	var err error
+	res := make([]*model.SkillGroupInput, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNSkillGroupInput2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐSkillGroupInput(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) unmarshalOString2ᚕstringᚄ(ctx context.Context, v any) ([]string, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []any
+	vSlice = graphql.CoerceList(v)
+	var err error
+	res := make([]string, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNString2string(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalOString2ᚕstringᚄ(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalNString2string(ctx, sel, v[i])
+	}
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v any) (*string, error) {

@@ -13,6 +13,21 @@ message ResumeData {
   repeated string skills = 5;
   repeated Experience experience = 6;
   repeated Education education = 7;
+  repeated Project projects = 8;
+  repeated Certificate certificates = 9;
+  
+  // Additional profile fields
+  string job_title = 10;
+  string location = 11;
+  string linkedin = 12;
+  string github = 13;
+  string website = 14;
+  string profile_image = 18; // Base64 encoded image
+  
+  // Structured data
+  repeated SkillGroup skill_groups = 15;
+  repeated Language languages = 16;
+  repeated Achievement achievements = 17;
 }
 
 message Experience {
@@ -29,6 +44,36 @@ message Education {
   string graduation_date = 3;
 }
 
+message Project {
+  string title = 1;
+  string description = 2;
+  repeated string tech_stack = 3;
+  string date = 4;
+  string location = 5;
+}
+
+message Certificate {
+  string name = 1;
+  string issuer = 2;
+  string date = 3;
+  string link = 4;
+}
+
+message SkillGroup {
+  string category = 1;
+  repeated string items = 2;
+}
+
+message Language {
+  string language = 1;
+  string proficiency = 2;
+}
+
+message Achievement {
+  string title = 1;
+  string description = 2;
+}
+
 // TailorRequest is used to request a tailored resume based on a job description.
 message TailorRequest {
   ResumeData original_resume = 1;
@@ -42,4 +87,40 @@ message TailorResponse {
 
 service ResumeService {
   rpc TailorResume (TailorRequest) returns (TailorResponse);
+}
+
+service ResumePersistenceService {
+  rpc SaveResume (SaveResumeRequest) returns (SavedResume);
+  rpc ListResumes (ListResumesRequest) returns (ListResumesResponse);
+  rpc DeleteResume (DeleteResumeRequest) returns (DeleteResumeResponse);
+}
+
+message SavedResume {
+  string id = 1;
+  ResumeData resume_data = 2;
+  repeated string tags = 3;
+  string version = 4;
+  string created_at = 5;
+}
+
+message SaveResumeRequest {
+  ResumeData resume = 1;
+  repeated string tags = 2;
+  string version = 3;
+}
+
+message ListResumesRequest {
+  repeated string tags = 1;
+}
+
+message ListResumesResponse {
+  repeated SavedResume resumes = 1;
+}
+
+message DeleteResumeRequest {
+  string id = 1;
+}
+
+message DeleteResumeResponse {
+  bool success = 1;
 }

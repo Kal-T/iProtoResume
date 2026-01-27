@@ -119,3 +119,182 @@ var ResumeService_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "shared/proto/resume.proto",
 }
+
+const (
+	ResumePersistenceService_SaveResume_FullMethodName   = "/resume.ResumePersistenceService/SaveResume"
+	ResumePersistenceService_ListResumes_FullMethodName  = "/resume.ResumePersistenceService/ListResumes"
+	ResumePersistenceService_DeleteResume_FullMethodName = "/resume.ResumePersistenceService/DeleteResume"
+)
+
+// ResumePersistenceServiceClient is the client API for ResumePersistenceService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type ResumePersistenceServiceClient interface {
+	SaveResume(ctx context.Context, in *SaveResumeRequest, opts ...grpc.CallOption) (*SavedResume, error)
+	ListResumes(ctx context.Context, in *ListResumesRequest, opts ...grpc.CallOption) (*ListResumesResponse, error)
+	DeleteResume(ctx context.Context, in *DeleteResumeRequest, opts ...grpc.CallOption) (*DeleteResumeResponse, error)
+}
+
+type resumePersistenceServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewResumePersistenceServiceClient(cc grpc.ClientConnInterface) ResumePersistenceServiceClient {
+	return &resumePersistenceServiceClient{cc}
+}
+
+func (c *resumePersistenceServiceClient) SaveResume(ctx context.Context, in *SaveResumeRequest, opts ...grpc.CallOption) (*SavedResume, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SavedResume)
+	err := c.cc.Invoke(ctx, ResumePersistenceService_SaveResume_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *resumePersistenceServiceClient) ListResumes(ctx context.Context, in *ListResumesRequest, opts ...grpc.CallOption) (*ListResumesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListResumesResponse)
+	err := c.cc.Invoke(ctx, ResumePersistenceService_ListResumes_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *resumePersistenceServiceClient) DeleteResume(ctx context.Context, in *DeleteResumeRequest, opts ...grpc.CallOption) (*DeleteResumeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteResumeResponse)
+	err := c.cc.Invoke(ctx, ResumePersistenceService_DeleteResume_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ResumePersistenceServiceServer is the server API for ResumePersistenceService service.
+// All implementations must embed UnimplementedResumePersistenceServiceServer
+// for forward compatibility.
+type ResumePersistenceServiceServer interface {
+	SaveResume(context.Context, *SaveResumeRequest) (*SavedResume, error)
+	ListResumes(context.Context, *ListResumesRequest) (*ListResumesResponse, error)
+	DeleteResume(context.Context, *DeleteResumeRequest) (*DeleteResumeResponse, error)
+	mustEmbedUnimplementedResumePersistenceServiceServer()
+}
+
+// UnimplementedResumePersistenceServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedResumePersistenceServiceServer struct{}
+
+func (UnimplementedResumePersistenceServiceServer) SaveResume(context.Context, *SaveResumeRequest) (*SavedResume, error) {
+	return nil, status.Error(codes.Unimplemented, "method SaveResume not implemented")
+}
+func (UnimplementedResumePersistenceServiceServer) ListResumes(context.Context, *ListResumesRequest) (*ListResumesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListResumes not implemented")
+}
+func (UnimplementedResumePersistenceServiceServer) DeleteResume(context.Context, *DeleteResumeRequest) (*DeleteResumeResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteResume not implemented")
+}
+func (UnimplementedResumePersistenceServiceServer) mustEmbedUnimplementedResumePersistenceServiceServer() {
+}
+func (UnimplementedResumePersistenceServiceServer) testEmbeddedByValue() {}
+
+// UnsafeResumePersistenceServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ResumePersistenceServiceServer will
+// result in compilation errors.
+type UnsafeResumePersistenceServiceServer interface {
+	mustEmbedUnimplementedResumePersistenceServiceServer()
+}
+
+func RegisterResumePersistenceServiceServer(s grpc.ServiceRegistrar, srv ResumePersistenceServiceServer) {
+	// If the following call panics, it indicates UnimplementedResumePersistenceServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&ResumePersistenceService_ServiceDesc, srv)
+}
+
+func _ResumePersistenceService_SaveResume_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SaveResumeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ResumePersistenceServiceServer).SaveResume(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ResumePersistenceService_SaveResume_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ResumePersistenceServiceServer).SaveResume(ctx, req.(*SaveResumeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ResumePersistenceService_ListResumes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListResumesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ResumePersistenceServiceServer).ListResumes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ResumePersistenceService_ListResumes_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ResumePersistenceServiceServer).ListResumes(ctx, req.(*ListResumesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ResumePersistenceService_DeleteResume_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteResumeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ResumePersistenceServiceServer).DeleteResume(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ResumePersistenceService_DeleteResume_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ResumePersistenceServiceServer).DeleteResume(ctx, req.(*DeleteResumeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// ResumePersistenceService_ServiceDesc is the grpc.ServiceDesc for ResumePersistenceService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var ResumePersistenceService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "resume.ResumePersistenceService",
+	HandlerType: (*ResumePersistenceServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "SaveResume",
+			Handler:    _ResumePersistenceService_SaveResume_Handler,
+		},
+		{
+			MethodName: "ListResumes",
+			Handler:    _ResumePersistenceService_ListResumes_Handler,
+		},
+		{
+			MethodName: "DeleteResume",
+			Handler:    _ResumePersistenceService_DeleteResume_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "shared/proto/resume.proto",
+}

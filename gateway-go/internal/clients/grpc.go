@@ -59,3 +59,29 @@ func NewResumeClient() (*TailorClient, error) {
 		Connection: conn,
 	}, nil
 }
+
+type PersistenceClient struct {
+	Client     pb.ResumePersistenceServiceClient
+	Connection *grpc.ClientConn
+}
+
+func NewPersistenceClient() (*PersistenceClient, error) {
+	// Reusing ATS Service URL as it hosts the persistence service
+	addr := os.Getenv("ATS_SERVICE_URL")
+	if addr == "" {
+		addr = "127.0.0.1:50052"
+	}
+
+	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return nil, err
+	}
+
+	client := pb.NewResumePersistenceServiceClient(conn)
+	log.Printf("Connected to Resume Persistence Service at %s", addr)
+
+	return &PersistenceClient{
+		Client:     client,
+		Connection: conn,
+	}, nil
+}

@@ -10,6 +10,7 @@ import (
 // here.
 
 type Resolver struct {
-	ATSClient    *clients.ValidationClient
-	ResumeClient *clients.TailorClient
+	ATSClient         *clients.ValidationClient
+	TailorClient      *clients.TailorClient
+	PersistenceClient *clients.PersistenceClient
 }

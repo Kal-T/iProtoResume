@@ -95,3 +95,161 @@ class ResumeService(object):
             timeout,
             metadata,
             _registered_method=True)
+
+
+class ResumePersistenceServiceStub(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.SaveResume = channel.unary_unary(
+                '/resume.ResumePersistenceService/SaveResume',
+                request_serializer=shared_dot_proto_dot_resume__pb2.SaveResumeRequest.SerializeToString,
+                response_deserializer=shared_dot_proto_dot_resume__pb2.SavedResume.FromString,
+                _registered_method=True)
+        self.ListResumes = channel.unary_unary(
+                '/resume.ResumePersistenceService/ListResumes',
+                request_serializer=shared_dot_proto_dot_resume__pb2.ListResumesRequest.SerializeToString,
+                response_deserializer=shared_dot_proto_dot_resume__pb2.ListResumesResponse.FromString,
+                _registered_method=True)
+        self.DeleteResume = channel.unary_unary(
+                '/resume.ResumePersistenceService/DeleteResume',
+                request_serializer=shared_dot_proto_dot_resume__pb2.DeleteResumeRequest.SerializeToString,
+                response_deserializer=shared_dot_proto_dot_resume__pb2.DeleteResumeResponse.FromString,
+                _registered_method=True)
+
+
+class ResumePersistenceServiceServicer(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def SaveResume(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListResumes(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeleteResume(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_ResumePersistenceServiceServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'SaveResume': grpc.unary_unary_rpc_method_handler(
+                    servicer.SaveResume,
+                    request_deserializer=shared_dot_proto_dot_resume__pb2.SaveResumeRequest.FromString,
+                    response_serializer=shared_dot_proto_dot_resume__pb2.SavedResume.SerializeToString,
+            ),
+            'ListResumes': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListResumes,
+                    request_deserializer=shared_dot_proto_dot_resume__pb2.ListResumesRequest.FromString,
+                    response_serializer=shared_dot_proto_dot_resume__pb2.ListResumesResponse.SerializeToString,
+            ),
+            'DeleteResume': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteResume,
+                    request_deserializer=shared_dot_proto_dot_resume__pb2.DeleteResumeRequest.FromString,
+                    response_serializer=shared_dot_proto_dot_resume__pb2.DeleteResumeResponse.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'resume.ResumePersistenceService', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('resume.ResumePersistenceService', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class ResumePersistenceService(object):
+    """Missing associated documentation comment in .proto file."""
+
+    @staticmethod
+    def SaveResume(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/resume.ResumePersistenceService/SaveResume',
+            shared_dot_proto_dot_resume__pb2.SaveResumeRequest.SerializeToString,
+            shared_dot_proto_dot_resume__pb2.SavedResume.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListResumes(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/resume.ResumePersistenceService/ListResumes',
+            shared_dot_proto_dot_resume__pb2.ListResumesRequest.SerializeToString,
+            shared_dot_proto_dot_resume__pb2.ListResumesResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def DeleteResume(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/resume.ResumePersistenceService/DeleteResume',
+            shared_dot_proto_dot_resume__pb2.DeleteResumeRequest.SerializeToString,
+            shared_dot_proto_dot_resume__pb2.DeleteResumeResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
