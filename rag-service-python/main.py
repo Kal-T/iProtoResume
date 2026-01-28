@@ -51,6 +51,7 @@ class ResumeService(resume_pb2_grpc.ResumeServiceServicer):
             The JSON must include the following tailored fields:
             - "summary": A compelling professional summary (max 4 lines).
             - "skills": A list of strings, prioritized by relevance to the JD.
+            - "cover_letter": A professional cover letter (3 paragraphs) addressed to the Hiring Manager, tailored to the JD.
             - "experience": A list of experience objects. Use the exact same structure as input. 
             For "description": Rewrite it to highlight relevant achievements. 
             CRITICAL: The description MUST be formatted as a single string where EACH bullet point starts with "* ". 
@@ -116,7 +117,7 @@ class ResumeService(resume_pb2_grpc.ResumeServiceServicer):
             
             return resume_pb2.TailorResponse(
                 tailored_resume=tailored_resume_proto,
-                cover_letter="Cover letter generation coming soon."
+                cover_letter=tailored_data.get("cover_letter", "Cover letter generation failed.")
             )
 
         except Exception as e:

@@ -66,6 +66,7 @@ function App() {
   const [atsResult, setAtsResult] = useState<ATSScore | null>(null);
   const [showTailorModal, setShowTailorModal] = useState(false);
   const [pendingTailoredData, setPendingTailoredData] = useState<Partial<ResumeData> | null>(null);
+  const [pendingCoverLetter, setPendingCoverLetter] = useState<string | null>(null);
 
   const [validateResume, { loading: validating }] = useMutation(VALIDATE_RESUME);
   const [tailorResume, { loading: tailoring, data: tailoredData }] = useMutation(TAILOR_RESUME);
@@ -160,6 +161,7 @@ function App() {
       if (data?.tailorResume?.tailoredResume) {
         // Store the tailored data and show preview modal
         setPendingTailoredData(data.tailorResume.tailoredResume);
+        setPendingCoverLetter(data.tailorResume.coverLetter);
         setShowTailorModal(true);
       }
     } catch (err) {
@@ -178,11 +180,13 @@ function App() {
     }
     setShowTailorModal(false);
     setPendingTailoredData(null);
+    setPendingCoverLetter(null);
   };
 
   const handleCancelTailor = () => {
     setShowTailorModal(false);
     setPendingTailoredData(null);
+    setPendingCoverLetter(null);
   };
 
   // Merge tailored data into preview if available
@@ -319,6 +323,8 @@ function App() {
           skills: pendingTailoredData?.skills,
           experience: pendingTailoredData?.experience
         }}
+        coverLetter={pendingCoverLetter}
+        fullResume={resume}
       />
     </div>
   );
