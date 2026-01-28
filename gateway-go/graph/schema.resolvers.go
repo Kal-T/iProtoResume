@@ -14,14 +14,27 @@ import (
 )
 
 // TailorResume is the resolver for the tailorResume field.
+// TailorResume is the resolver for the tailorResume field.
 func (r *mutationResolver) TailorResume(ctx context.Context, input model.TailorResumeInput) (*model.TailorResponse, error) {
 	req := &pb.TailorRequest{
 		OriginalResume: &pb.ResumeData{
-			FullName: input.OriginalResume.FullName,
-			Email:    input.OriginalResume.Email,
-			Phone:    getStringValue(input.OriginalResume.Phone),
-			Summary:  getStringValue(input.OriginalResume.Summary),
-			Skills:   input.OriginalResume.Skills,
+			FullName:     input.OriginalResume.FullName,
+			Email:        input.OriginalResume.Email,
+			Phone:        getStringValue(input.OriginalResume.Phone),
+			Summary:      getStringValue(input.OriginalResume.Summary),
+			Skills:       input.OriginalResume.Skills,
+			JobTitle:     getStringValue(input.OriginalResume.JobTitle),
+			Location:     getStringValue(input.OriginalResume.Location),
+			Linkedin:     getStringValue(input.OriginalResume.Linkedin),
+			Github:       getStringValue(input.OriginalResume.Github),
+			Website:      getStringValue(input.OriginalResume.Website),
+			Experience:   mapExperienceInput(input.OriginalResume.Experience),
+			Education:    mapEducationInput(input.OriginalResume.Education),
+			Projects:     mapProjectInput(input.OriginalResume.Projects),
+			Certificates: mapCertificateInput(input.OriginalResume.Certificates),
+			SkillGroups:  mapSkillGroupInput(input.OriginalResume.SkillGroups),
+			Languages:    mapLanguageInput(input.OriginalResume.Languages),
+			Achievements: mapAchievementInput(input.OriginalResume.Achievements),
 		},
 		JobDescription: input.JobDescription,
 	}
@@ -32,14 +45,8 @@ func (r *mutationResolver) TailorResume(ctx context.Context, input model.TailorR
 	}
 
 	return &model.TailorResponse{
-		TailoredResume: &model.ResumeData{
-			FullName: resp.TailoredResume.FullName,
-			Email:    resp.TailoredResume.Email,
-			Phone:    &resp.TailoredResume.Phone,
-			Summary:  &resp.TailoredResume.Summary,
-			Skills:   resp.TailoredResume.Skills,
-		},
-		CoverLetter: &resp.CoverLetter,
+		TailoredResume: mapProtoResumeToModel(resp.TailoredResume),
+		CoverLetter:    &resp.CoverLetter,
 	}, nil
 }
 

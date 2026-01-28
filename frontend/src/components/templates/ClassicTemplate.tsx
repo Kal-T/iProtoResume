@@ -94,17 +94,17 @@ export const ClassicTemplate = ({ data }: TemplateProps) => {
                             <div className="flex flex-wrap gap-4 mt-2">
                                 {data.linkedin && (
                                     <a href={data.linkedin.startsWith('http') ? data.linkedin : `https://${data.linkedin}`} className="hover:underline flex items-center gap-1">
-                                        <span>🔗</span> LinkedIn
+                                        <span>🔗</span> {data.linkedin.replace(/^https?:\/\/(www\.)?/, '')}
                                     </a>
                                 )}
                                 {data.github && (
                                     <a href={data.github.startsWith('http') ? data.github : `https://${data.github}`} className="hover:underline flex items-center gap-1">
-                                        <span>💻</span> GitHub
+                                        <span>💻</span> {data.github.replace(/^https?:\/\/(www\.)?/, '')}
                                     </a>
                                 )}
                                 {data.website && (
                                     <a href={data.website.startsWith('http') ? data.website : `https://${data.website}`} className="hover:underline flex items-center gap-1">
-                                        <span>🌐</span> Portfolio
+                                        <span>🌐</span> {data.website.replace(/^https?:\/\/(www\.)?/, '')}
                                     </a>
                                 )}
                             </div>

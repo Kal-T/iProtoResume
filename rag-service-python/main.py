@@ -24,129 +24,106 @@ class ResumeService(resume_pb2_grpc.ResumeServiceServicer):
     def TailorResume(self, request, context):
         logger.info(f"Received TailorResume request for: {request.original_resume.full_name}")
         
-        # 1. RAG Retrieval 
-        # (For MVP, we use the input JD directly as context if vector store is empty, 
-        # but in a real app we'd query resume chunks. Here we'll pass the whole resume for tailoring)
-        
-        # 2. LLM Generation
         try:
-            llm = LLMFactory.create_llm(provider="gemini") # Defaulting to Gemini
+            llm = LLMFactory.create_llm(provider="gemini")
             
-            prompt_template = """
-            You are an expert Resume Writer. 
-            Tailor the following resume summary and skills to match the job description.
+            # --- 1. Prepare Data ---
+            # Convert Proto to Dict for easier handling in prompt
+            from google.protobuf import json_format
+            resume_dict = json_format.MessageToDict(request.original_resume, preserving_proto_field_name=True)
             
-            Original Resume Summary: {summary}
-            Original Skills: {skills}
+            # --- 2. Construct Prompt with Style Guidelines ---
+            system_instruction = """
+            You are an expert Resume Writer with 20 years of experience in ATS optimization.
+            Your goal is to rewrite the resume content to perfectly match the provided Job Description (JD).
             
-            Job Description: {job_description}
+            ### STYLE GUIDELINES (STRICTLY FOLLOW)
+            1. **Tone**: Professional, confident, and active.
+            2. **Action Verbs**: Start every bullet point with a strong action verb (e.g., "Architected", "Deployed", "Optimized").
+            3. **Quantifiable Results**: Whenever possible, include metrics (e.g., "Reduced latency by 40%", "Increased revenue by $1M").
+            4. **Conciseness**: Remove fluff. Be direct.
+            5. **Keywords**: Naturally integrate keywords from the JD.
             
-            Output strictly in this format:
-            Summary: <Optimized Summary>
-            Skills: <Comma separated list of top 5 relevant skills>
+            ### OUTPUT FORMAT
+            You must output a VALID JSON object that matches the structure of the input resume data.
+            Do NOT encompass the JSON in markdown code blocks. Just valid JSON.
+            
+            The JSON must include the following tailored fields:
+            - "summary": A compelling professional summary (max 4 lines).
+            - "skills": A list of strings, prioritized by relevance to the JD.
+            - "experience": A list of experience objects. Use the exact same structure as input. 
+            For "description": Rewrite it to highlight relevant achievements. 
+            CRITICAL: The description MUST be formatted as a single string where EACH bullet point starts with "* ". 
+            Example: "* Architected a scalable microservices system.\n* Reduced AWS costs by 40%."
+
+            Do NOT invent new jobs. Only rewrite the content of the existing ones.
             """
             
-            prompt = PromptTemplate(
-                input_variables=["summary", "skills", "job_description"],
-                template=prompt_template
-            )
+            human_instruction = f"""
+            ### IO DATA
             
-            chain = prompt | llm
+            **Job Description**:
+            {request.job_description}
             
-            # Ensure valid values (avoid None/empty that might cause type errors)
-            summary = request.original_resume.summary if request.original_resume.summary else "No summary provided"
-            skills = ", ".join(request.original_resume.skills) if request.original_resume.skills else "No skills provided"
-            job_desc = request.job_description if request.job_description else "No job description provided"
+            **Original Resume Data (JSON)**:
+            {resume_dict}
             
-            response = chain.invoke({
-                "summary": summary,
-                "skills": skills,
-                "job_description": job_desc
-            })
+            ### TASK
+            Rewrite the 'summary', 'skills', and 'experience' sections based on the Style Guidelines and JD.
+            Return ONLY the JSON.
+            """
             
+            from langchain_core.messages import SystemMessage, HumanMessage
+            messages = [
+                SystemMessage(content=system_instruction),
+                HumanMessage(content=human_instruction)
+            ]
             
-            # Extract text from response (handle both string and structured formats)
-            raw_content = response.content
+            # --- 3. Call LLM ---
+            logger.info("Sending request to LLM...")
+            response = llm.invoke(messages)
             
-            # If content is a list of dicts (newer LangChain format)
-            if isinstance(raw_content, list):
-                content = ""
-                for part in raw_content:
-                    if isinstance(part, dict) and 'text' in part:
-                        content += part['text']
-                    elif isinstance(part, str):
-                        content += part
-                content = content.strip()
-            else:
-                content = str(raw_content).strip()
+            # --- 4. Parse Response ---
+            import json
+            import re
             
-            logger.info(f"Raw AI Response: {content[:200]}...")  # Log first 200 chars
+            content = response.content
+            # Handle list format (newer LangChain returns content blocks)
+            if isinstance(content, list):
+                content = "".join(
+                    part.get('text', '') if isinstance(part, dict) else str(part) 
+                    for part in content
+                )
+            # Strip markdown code blocks if present
+            content = re.sub(r'```json\n|\n```', '', str(content)).strip()
+            content = re.sub(r'```\n|\n```', '', content).strip()
             
-            # Parse response with more flexible handling
-            new_summary = ""
-            new_skills = []
-            
+            logger.info("Parsing LLM response...")
             try:
-                if "Summary:" in content and "Skills:" in content:
-                    parts = content.split("Skills:", 1)  # Split only once
-                    new_summary = str(parts[0].replace("Summary:", "").strip())
-                    
-                    # Parse skills
-                    skills_text = parts[1].strip()
-                    # Remove any trailing periods, newlines, etc.
-                    skills_text = skills_text.split('\n')[0].strip()
-                    new_skills = [str(s.strip()) for s in skills_text.split(",") if s.strip()]
-                    
-                    logger.info(f"Parsed Summary: {new_summary[:50]}...")
-                    logger.info(f"Parsed Skills: {new_skills}")
-                elif "Summary:" in content:
-                    # Only summary found
-                    new_summary = str(content.replace("Summary:", "").strip())[:500]
-                    new_skills = ["General"]
-                else:
-                    # No expected format, use raw content
-                    new_summary = str(content).strip()[:500]
-                    new_skills = ["AI Generated"]
-                
-                # Ensure we have valid values
-                if not new_summary or len(new_summary) < 10:
-                    new_summary = "AI-tailored professional summary optimized for the target role."
-                if not new_skills or len(new_skills) == 0:
-                    new_skills = ["AI Skill"]
-                    
-            except Exception as parse_error:
-                logger.error(f"Parsing error: {parse_error}")
-                new_summary = "Error parsing AI response"
-                new_skills = ["AI Skill"]
+                tailored_data = json.loads(content)
+            except json.JSONDecodeError as je:
+                logger.error(f"JSON Decode Error: {je}. Content: {content[:100]}...")
+                raise ValueError("Failed to parse AI response as JSON")
+
+            # --- 5. Merge & Return ---
+            # We create a new dict merging original with tailored
+            merged_resume = resume_dict.copy()
+            merged_resume.update(tailored_data)
             
-            # Ensure all values are valid strings
-            tailored_resume = resume_pb2.ResumeData(
-                full_name=str(request.original_resume.full_name),
-                email=str(request.original_resume.email),
-                summary=new_summary
-            )
-            # Add skills one by one to avoid type issues
-            for skill in new_skills:
-                tailored_resume.skills.append(str(skill))
+            # Convert back to Proto
+            tailored_resume_proto = resume_pb2.ResumeData()
+            json_format.ParseDict(merged_resume, tailored_resume_proto, ignore_unknown_fields=True)
             
             return resume_pb2.TailorResponse(
-                tailored_resume=tailored_resume,
-                cover_letter="Cover letter generation pending..."
+                tailored_resume=tailored_resume_proto,
+                cover_letter="Cover letter generation coming soon."
             )
-            
+
         except Exception as e:
-            logger.error(f"AI Error: {e}")
-            # Fallback to echo if AI fails
-            tailored_resume = resume_pb2.ResumeData(
-                full_name=request.original_resume.full_name,
-                email=request.original_resume.email,
-                skills=list(request.original_resume.skills) + ["AI-Offline"],
-                summary=f"Error generating AI content: {str(e)}"
-            )
-            return resume_pb2.TailorResponse(
-                tailored_resume=tailored_resume,
-                cover_letter="Error generating cover letter."
-            )
+            logger.error(f"Error tailoring resume: {str(e)}")
+            context.set_details(str(e))
+            context.set_code(grpc.StatusCode.INTERNAL)
+            return resume_pb2.TailorResponse()
 
 from config import settings
 

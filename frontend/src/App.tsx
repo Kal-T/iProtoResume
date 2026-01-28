@@ -4,6 +4,7 @@ import { ResumeForm } from './components/ResumeForm';
 import { JobDescriptionInput } from './components/JobDescriptionInput';
 import { ATSScoreView } from './components/ATSScoreView';
 import { ResumePreview } from './components/ResumePreview';
+import { TailorPreviewModal } from './components/TailorPreviewModal';
 import type { ResumeData, ATSScore } from './types';
 import { useMutation, gql } from '@apollo/client';
 
@@ -23,6 +24,13 @@ const TAILOR_RESUME = gql`
       tailoredResume {
         summary
         skills
+        experience {
+          title
+          company
+          startDate
+          endDate
+          description
+        }
       }
       coverLetter
     }
@@ -55,6 +63,8 @@ function App() {
   });
   const [jd, setJd] = useState('');
   const [atsResult, setAtsResult] = useState<ATSScore | null>(null);
+  const [showTailorModal, setShowTailorModal] = useState(false);
+  const [pendingTailoredData, setPendingTailoredData] = useState<Partial<ResumeData> | null>(null);
 
   const [validateResume, { loading: validating }] = useMutation(VALIDATE_RESUME);
   const [tailorResume, { loading: tailoring, data: tailoredData }] = useMutation(TAILOR_RESUME);
@@ -65,16 +75,19 @@ function App() {
     documentTitle: `${resume.fullName || 'Resume'}_CV`,
   });
 
-  // Helper to remove extra fields that GraphQL doesn't know about yet
-  // The GraphQL ResumeInput only has: fullName, email, phone, summary, skills, experience, education
+  // Helper to sanitize resume data for backend GraphQL
   const sanitizeResumeForBackend = (data: ResumeData) => {
     return {
       fullName: data.fullName,
       email: data.email,
       phone: data.phone || null,
       summary: data.summary || null,
-      skills: data.skills, // AI still uses the flat list for now
-      // Projects and Certificates are local-only for now until backend schema updates
+      skills: data.skills,
+      jobTitle: data.jobTitle || null,
+      location: data.location || null,
+      linkedin: data.linkedin || null,
+      github: data.github || null,
+      website: data.website || null,
       experience: data.experience.map(e => ({
         title: e.title,
         company: e.company,
@@ -86,7 +99,32 @@ function App() {
         degree: e.degree,
         institution: e.institution,
         graduationDate: e.graduationDate || null
-      }))
+      })),
+      projects: (data.projects || []).map(p => ({
+        title: p.title,
+        description: p.description,
+        techStack: p.techStack || [],
+        date: p.date || null,
+        location: p.location || null
+      })),
+      certificates: (data.certificates || []).map(c => ({
+        name: c.name,
+        issuer: c.issuer,
+        date: c.date || null,
+        link: c.link || null
+      })),
+      skillGroups: data.skillGroups?.map(sg => ({
+        category: sg.category,
+        items: sg.items
+      })) || null,
+      languages: data.languages?.map(l => ({
+        language: l.language,
+        proficiency: l.proficiency
+      })) || null,
+      achievements: data.achievements?.map(a => ({
+        title: a.title,
+        description: a.description
+      })) || null
     };
   };
 
@@ -109,7 +147,7 @@ function App() {
 
   const handleTailor = async () => {
     try {
-      await tailorResume({
+      const { data } = await tailorResume({
         variables: {
           input: {
             originalResume: sanitizeResumeForBackend(resume),
@@ -117,10 +155,33 @@ function App() {
           },
         },
       });
+
+      if (data?.tailorResume?.tailoredResume) {
+        // Store the tailored data and show preview modal
+        setPendingTailoredData(data.tailorResume.tailoredResume);
+        setShowTailorModal(true);
+      }
     } catch (err) {
       console.error(err);
       alert('Error tailoring resume.');
     }
+  };
+
+  const handleApplyTailoredChanges = () => {
+    if (pendingTailoredData) {
+      setResume(prev => ({
+        ...prev,
+        ...pendingTailoredData
+      }));
+      setAtsResult(null); // Clear previous ATS result as content changed
+    }
+    setShowTailorModal(false);
+    setPendingTailoredData(null);
+  };
+
+  const handleCancelTailor = () => {
+    setShowTailorModal(false);
+    setPendingTailoredData(null);
   };
 
   // Merge tailored data into preview if available
@@ -166,9 +227,7 @@ function App() {
           <div className="max-w-2xl mx-auto space-y-8">
 
             <section>
-              <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                📝 Resume Details
-              </h2>
+
               <ResumeForm data={resume} onChange={setResume} />
             </section>
 
@@ -242,6 +301,24 @@ function App() {
         </div>
 
       </div>
+
+      {/* Tailor Preview Modal */}
+      <TailorPreviewModal
+        isOpen={showTailorModal}
+        onClose={handleCancelTailor}
+        onApply={handleApplyTailoredChanges}
+        original={{
+          summary: resume.summary,
+          skills: resume.skills,
+          skillGroups: resume.skillGroups,
+          experience: resume.experience
+        }}
+        tailored={{
+          summary: pendingTailoredData?.summary,
+          skills: pendingTailoredData?.skills,
+          experience: pendingTailoredData?.experience
+        }}
+      />
     </div>
   );
 }

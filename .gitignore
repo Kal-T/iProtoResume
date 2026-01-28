@@ -21,6 +21,7 @@ venv/
 .venv/
 .pytest_cache/
 *.egg-info/
+rag-service-python/chroma_db/
 
 # Node/Frontend
 node_modules/
