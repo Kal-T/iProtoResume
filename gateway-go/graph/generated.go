@@ -80,16 +80,23 @@ type ComplexityRoot struct {
 		Title       func(childComplexity int) int
 	}
 
+	InterviewQuestion struct {
+		AnswerGuide func(childComplexity int) int
+		Question    func(childComplexity int) int
+		Type        func(childComplexity int) int
+	}
+
 	Language struct {
 		Language    func(childComplexity int) int
 		Proficiency func(childComplexity int) int
 	}
 
 	Mutation struct {
-		DeleteResume   func(childComplexity int, id string) int
-		SaveResume     func(childComplexity int, input model.SaveResumeInput) int
-		TailorResume   func(childComplexity int, input model.TailorResumeInput) int
-		ValidateResume func(childComplexity int, input model.ValidateResumeInput) int
+		DeleteResume               func(childComplexity int, id string) int
+		GenerateInterviewQuestions func(childComplexity int, input model.InterviewPrepInput) int
+		SaveResume                 func(childComplexity int, input model.SaveResumeInput) int
+		TailorResume               func(childComplexity int, input model.TailorResumeInput) int
+		ValidateResume             func(childComplexity int, input model.ValidateResumeInput) int
 	}
 
 	Project struct {
@@ -103,6 +110,10 @@ type ComplexityRoot struct {
 	Query struct {
 		Health      func(childComplexity int) int
 		ListResumes func(childComplexity int, filter *model.ListResumesFilter) int
+	}
+
+	QuestionsResponse struct {
+		Questions func(childComplexity int) int
 	}
 
 	ResumeData struct {
@@ -150,6 +161,7 @@ type MutationResolver interface {
 	ValidateResume(ctx context.Context, input model.ValidateResumeInput) (*model.ATSScore, error)
 	SaveResume(ctx context.Context, input model.SaveResumeInput) (*model.SavedResume, error)
 	DeleteResume(ctx context.Context, id string) (bool, error)
+	GenerateInterviewQuestions(ctx context.Context, input model.InterviewPrepInput) (*model.QuestionsResponse, error)
 }
 type QueryResolver interface {
 	Health(ctx context.Context) (string, error)
@@ -288,6 +300,25 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Experience.Title(childComplexity), true
 
+	case "InterviewQuestion.answerGuide":
+		if e.complexity.InterviewQuestion.AnswerGuide == nil {
+			break
+		}
+
+		return e.complexity.InterviewQuestion.AnswerGuide(childComplexity), true
+	case "InterviewQuestion.question":
+		if e.complexity.InterviewQuestion.Question == nil {
+			break
+		}
+
+		return e.complexity.InterviewQuestion.Question(childComplexity), true
+	case "InterviewQuestion.type":
+		if e.complexity.InterviewQuestion.Type == nil {
+			break
+		}
+
+		return e.complexity.InterviewQuestion.Type(childComplexity), true
+
 	case "Language.language":
 		if e.complexity.Language.Language == nil {
 			break
@@ -312,6 +343,17 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Mutation.DeleteResume(childComplexity, args["id"].(string)), true
+	case "Mutation.generateInterviewQuestions":
+		if e.complexity.Mutation.GenerateInterviewQuestions == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_generateInterviewQuestions_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.GenerateInterviewQuestions(childComplexity, args["input"].(model.InterviewPrepInput)), true
 	case "Mutation.saveResume":
 		if e.complexity.Mutation.SaveResume == nil {
 			break
@@ -394,6 +436,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Query.ListResumes(childComplexity, args["filter"].(*model.ListResumesFilter)), true
+
+	case "QuestionsResponse.questions":
+		if e.complexity.QuestionsResponse.Questions == nil {
+			break
+		}
+
+		return e.complexity.QuestionsResponse.Questions(childComplexity), true
 
 	case "ResumeData.achievements":
 		if e.complexity.ResumeData.Achievements == nil {
@@ -573,6 +622,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputCertificateInput,
 		ec.unmarshalInputEducationInput,
 		ec.unmarshalInputExperienceInput,
+		ec.unmarshalInputInterviewPrepInput,
 		ec.unmarshalInputLanguageInput,
 		ec.unmarshalInputListResumesFilter,
 		ec.unmarshalInputProjectInput,
@@ -705,6 +755,17 @@ func (ec *executionContext) field_Mutation_deleteResume_args(ctx context.Context
 		return nil, err
 	}
 	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_generateInterviewQuestions_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNInterviewPrepInput2githubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐInterviewPrepInput)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
 	return args, nil
 }
 
@@ -1337,6 +1398,93 @@ func (ec *executionContext) fieldContext_Experience_description(_ context.Contex
 	return fc, nil
 }
 
+func (ec *executionContext) _InterviewQuestion_question(ctx context.Context, field graphql.CollectedField, obj *model.InterviewQuestion) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_InterviewQuestion_question,
+		func(ctx context.Context) (any, error) {
+			return obj.Question, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_InterviewQuestion_question(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "InterviewQuestion",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _InterviewQuestion_type(ctx context.Context, field graphql.CollectedField, obj *model.InterviewQuestion) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_InterviewQuestion_type,
+		func(ctx context.Context) (any, error) {
+			return obj.Type, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_InterviewQuestion_type(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "InterviewQuestion",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _InterviewQuestion_answerGuide(ctx context.Context, field graphql.CollectedField, obj *model.InterviewQuestion) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_InterviewQuestion_answerGuide,
+		func(ctx context.Context) (any, error) {
+			return obj.AnswerGuide, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_InterviewQuestion_answerGuide(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "InterviewQuestion",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Language_language(ctx context.Context, field graphql.CollectedField, obj *model.Language) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -1581,6 +1729,51 @@ func (ec *executionContext) fieldContext_Mutation_deleteResume(ctx context.Conte
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_deleteResume_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_generateInterviewQuestions(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Mutation_generateInterviewQuestions,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.resolvers.Mutation().GenerateInterviewQuestions(ctx, fc.Args["input"].(model.InterviewPrepInput))
+		},
+		nil,
+		ec.marshalNQuestionsResponse2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐQuestionsResponse,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Mutation_generateInterviewQuestions(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "questions":
+				return ec.fieldContext_QuestionsResponse_questions(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type QuestionsResponse", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_generateInterviewQuestions_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -1917,6 +2110,43 @@ func (ec *executionContext) fieldContext_Query___schema(_ context.Context, field
 				return ec.fieldContext___Schema_directives(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type __Schema", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _QuestionsResponse_questions(ctx context.Context, field graphql.CollectedField, obj *model.QuestionsResponse) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_QuestionsResponse_questions,
+		func(ctx context.Context) (any, error) {
+			return obj.Questions, nil
+		},
+		nil,
+		ec.marshalNInterviewQuestion2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐInterviewQuestionᚄ,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_QuestionsResponse_questions(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "QuestionsResponse",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "question":
+				return ec.fieldContext_InterviewQuestion_question(ctx, field)
+			case "type":
+				return ec.fieldContext_InterviewQuestion_type(ctx, field)
+			case "answerGuide":
+				return ec.fieldContext_InterviewQuestion_answerGuide(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type InterviewQuestion", field.Name)
 		},
 	}
 	return fc, nil
@@ -4465,6 +4695,40 @@ func (ec *executionContext) unmarshalInputExperienceInput(ctx context.Context, o
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputInterviewPrepInput(ctx context.Context, obj any) (model.InterviewPrepInput, error) {
+	var it model.InterviewPrepInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"resume", "jobDescription"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "resume":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("resume"))
+			data, err := ec.unmarshalNResumeInput2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐResumeInput(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Resume = data
+		case "jobDescription":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("jobDescription"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.JobDescription = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputLanguageInput(ctx context.Context, obj any) (model.LanguageInput, error) {
 	var it model.LanguageInput
 	asMap := map[string]any{}
@@ -5117,6 +5381,52 @@ func (ec *executionContext) _Experience(ctx context.Context, sel ast.SelectionSe
 	return out
 }
 
+var interviewQuestionImplementors = []string{"InterviewQuestion"}
+
+func (ec *executionContext) _InterviewQuestion(ctx context.Context, sel ast.SelectionSet, obj *model.InterviewQuestion) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, interviewQuestionImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("InterviewQuestion")
+		case "question":
+			out.Values[i] = ec._InterviewQuestion_question(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "type":
+			out.Values[i] = ec._InterviewQuestion_type(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "answerGuide":
+			out.Values[i] = ec._InterviewQuestion_answerGuide(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var languageImplementors = []string{"Language"}
 
 func (ec *executionContext) _Language(ctx context.Context, sel ast.SelectionSet, obj *model.Language) graphql.Marshaler {
@@ -5204,6 +5514,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "deleteResume":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_deleteResume(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "generateInterviewQuestions":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_generateInterviewQuestions(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -5355,6 +5672,45 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Query___schema(ctx, field)
 			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var questionsResponseImplementors = []string{"QuestionsResponse"}
+
+func (ec *executionContext) _QuestionsResponse(ctx context.Context, sel ast.SelectionSet, obj *model.QuestionsResponse) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, questionsResponseImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("QuestionsResponse")
+		case "questions":
+			out.Values[i] = ec._QuestionsResponse_questions(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -6247,6 +6603,65 @@ func (ec *executionContext) marshalNInt2int32(ctx context.Context, sel ast.Selec
 	return res
 }
 
+func (ec *executionContext) unmarshalNInterviewPrepInput2githubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐInterviewPrepInput(ctx context.Context, v any) (model.InterviewPrepInput, error) {
+	res, err := ec.unmarshalInputInterviewPrepInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNInterviewQuestion2ᚕᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐInterviewQuestionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.InterviewQuestion) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNInterviewQuestion2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐInterviewQuestion(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNInterviewQuestion2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐInterviewQuestion(ctx context.Context, sel ast.SelectionSet, v *model.InterviewQuestion) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._InterviewQuestion(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNLanguage2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐLanguage(ctx context.Context, sel ast.SelectionSet, v *model.Language) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -6334,6 +6749,20 @@ func (ec *executionContext) unmarshalNProjectInput2ᚕᚖgithubᚗcomᚋiprotore
 func (ec *executionContext) unmarshalNProjectInput2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐProjectInput(ctx context.Context, v any) (*model.ProjectInput, error) {
 	res, err := ec.unmarshalInputProjectInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNQuestionsResponse2githubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐQuestionsResponse(ctx context.Context, sel ast.SelectionSet, v model.QuestionsResponse) graphql.Marshaler {
+	return ec._QuestionsResponse(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNQuestionsResponse2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐQuestionsResponse(ctx context.Context, sel ast.SelectionSet, v *model.QuestionsResponse) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._QuestionsResponse(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNResumeData2ᚖgithubᚗcomᚋiprotoresumeᚋgatewayᚑgoᚋgraphᚋmodelᚐResumeData(ctx context.Context, sel ast.SelectionSet, v *model.ResumeData) graphql.Marshaler {

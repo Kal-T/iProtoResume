@@ -4,7 +4,10 @@ import { ResumeForm } from './components/ResumeForm';
 import { JobDescriptionInput } from './components/JobDescriptionInput';
 import { ATSScoreView } from './components/ATSScoreView';
 import { ResumePreview } from './components/ResumePreview';
+import { InterviewPrepModal } from './components/InterviewPrepModal';
 import { TailorPreviewModal } from './components/TailorPreviewModal';
+
+
 import type { ResumeData, ATSScore } from './types';
 import { useMutation, gql } from '@apollo/client';
 
@@ -34,6 +37,18 @@ const TAILOR_RESUME = gql`
         }
       }
       coverLetter
+    }
+  }
+`;
+
+const GENERATE_INTERVIEW_QUESTIONS = gql`
+  mutation GenerateInterviewQuestions($input: InterviewPrepInput!) {
+    generateInterviewQuestions(input: $input) {
+      questions {
+        question
+        type
+        answerGuide
+      }
     }
   }
 `;
@@ -70,6 +85,10 @@ function App() {
 
   const [validateResume, { loading: validating }] = useMutation(VALIDATE_RESUME);
   const [tailorResume, { loading: tailoring, data: tailoredData }] = useMutation(TAILOR_RESUME);
+  const [generateInterviewQuestions, { loading: generatingQuestions }] = useMutation(GENERATE_INTERVIEW_QUESTIONS);
+
+  const [showInterviewModal, setShowInterviewModal] = useState(false);
+  const [interviewQuestions, setInterviewQuestions] = useState<any[]>([]);
 
   const componentRef = useRef<HTMLDivElement>(null);
   const handlePrint = useReactToPrint({
@@ -167,6 +186,27 @@ function App() {
     } catch (err) {
       console.error(err);
       alert('Error tailoring resume.');
+    }
+  };
+
+  const handleInterviewPrep = async () => {
+    try {
+      const { data } = await generateInterviewQuestions({
+        variables: {
+          input: {
+            resume: sanitizeResumeForBackend(resume),
+            jobDescription: jd,
+          },
+        },
+      });
+
+      if (data?.generateInterviewQuestions?.questions) {
+        setInterviewQuestions(data.generateInterviewQuestions.questions);
+        setShowInterviewModal(true);
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error generating interview questions.');
     }
   };
 
@@ -270,19 +310,29 @@ function App() {
                   </>
                 )}
               </button>
-              <button
-                onClick={handleTailor}
-                disabled={tailoring}
-                className="flex-1 bg-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-purple-700 transition disabled:opacity-50 shadow-sm flex justify-center items-center gap-2"
-              >
-                {tailoring ? (
-                  'Tailoring...'
-                ) : (
-                  <>
-                    <span>✨ Tailor with AI</span>
-                  </>
-                )}
-              </button>
+              <div className="flex-1 flex gap-2">
+                <button
+                  onClick={handleTailor}
+                  disabled={tailoring}
+                  className="flex-1 bg-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-purple-700 transition disabled:opacity-50 shadow-sm flex justify-center items-center gap-2"
+                >
+                  {tailoring ? (
+                    'Tailoring...'
+                  ) : (
+                    <>
+                      <span>✨ Tailor with AI</span>
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={handleInterviewPrep}
+                  disabled={generatingQuestions}
+                  className="bg-indigo-50 text-indigo-700 border border-indigo-200 px-4 rounded-lg font-medium hover:bg-indigo-100 transition disabled:opacity-50 flex items-center justify-center"
+                  title="Generate Interview Questions"
+                >
+                  {generatingQuestions ? '...' : '🎤'}
+                </button>
+              </div>
             </section>
 
             {/* Analysis Results */}
@@ -319,7 +369,6 @@ function App() {
 
       </div>
 
-      {/* Tailor Preview Modal */}
       <TailorPreviewModal
         isOpen={showTailorModal}
         onClose={handleCancelTailor}
@@ -337,6 +386,12 @@ function App() {
         }}
         coverLetter={pendingCoverLetter}
         fullResume={resume}
+      />
+      <InterviewPrepModal
+        isOpen={showInterviewModal}
+        onClose={() => setShowInterviewModal(false)}
+        questions={interviewQuestions}
+        jobDescription={jd}
       />
     </div>
   );

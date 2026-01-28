@@ -205,6 +205,91 @@ class ResumeService(resume_pb2_grpc.AIServiceServicer):
             context.set_code(grpc.StatusCode.INTERNAL)
             return resume_pb2.AnalyzeResumeResponse()
 
+    def GenerateInterviewQuestions(self, request, context):
+        logger.info(f"Received GenerateInterviewQuestions request")
+        
+        try:
+            llm = LLMFactory.create_llm(provider="gemini")
+            
+            from google.protobuf import json_format
+            resume_dict = json_format.MessageToDict(request.resume, preserving_proto_field_name=True)
+            
+            system_instruction = """
+            You are an expert Technical Interviewer. 
+            Based on the candidate's Resume and the Job Description, generate a list of 10 targeted interview questions.
+            
+            ### MIX OF QUESTIONS
+            - 4 Technical (Hard Skills/Coding/System Design relevant to the role).
+            - 4 Behavioral (STAR method based on their experience).
+            - 2 Soft Skills/Cultural Fit.
+            
+            ### OUTPUT FORMAT
+            Return a VALID JSON object with a single key "questions", which is a list of objects.
+            Structure:
+            {
+              "questions": [
+                {
+                  "question": "...",
+                  "type": "Technical",
+                  "answer_guide": "STRATEGY: Mention Redis and async. EXAMPLE FROM RESUME: Refer to your time at [Company] where you optimized API latency by 40%."
+                },
+                ...
+              ]
+            }
+            
+            ### CONTENT RULES
+            - **Question**: Must be relevant to the JD and Resume.
+            - **Answer Guide**: Must have two parts:
+              1. **Strategy**: What concepts to cover.
+              2. **Personal Example**: A specific project or achievement from the CANDIDATE'S RESUME that answers this question. Use specific metrics/technologies from their background.
+            """
+            
+            human_instruction = f"""
+            ### JOB DESCRIPTION
+            {request.job_description}
+            
+            ### RESUME
+            {resume_dict}
+            """
+            
+            from langchain_core.messages import SystemMessage, HumanMessage
+            messages = [
+                SystemMessage(content=system_instruction),
+                HumanMessage(content=human_instruction)
+            ]
+            
+            logger.info("Generating Interview Questions...")
+            response = llm.invoke(messages)
+            
+            import json
+            import re
+            
+            content = response.content
+            if isinstance(content, list):
+                content = "".join(part.get('text', '') if isinstance(part, dict) else str(part) for part in content)
+            
+            content = re.sub(r'```json\n|\n```', '', str(content)).strip()
+            content = re.sub(r'```\n|\n```', '', content).strip()
+            
+            data = json.loads(content)
+            questions_list = data.get("questions", [])
+            
+            response_proto = resume_pb2.InterviewPrepResponse()
+            for q in questions_list:
+                response_proto.questions.append(resume_pb2.InterviewQuestion(
+                    question=q.get("question", ""),
+                    type=q.get("type", "General"),
+                    answer_guide=q.get("answer_guide", "")
+                ))
+                
+            return response_proto
+
+        except Exception as e:
+            logger.error(f"Error generating interview questions: {str(e)}")
+            context.set_details(str(e))
+            context.set_code(grpc.StatusCode.INTERNAL)
+            return resume_pb2.InterviewPrepResponse()
+
 from config import settings
 
 def serve():

@@ -61,6 +61,17 @@ type ExperienceInput struct {
 	Description *string `json:"description,omitempty"`
 }
 
+type InterviewPrepInput struct {
+	Resume         *ResumeInput `json:"resume"`
+	JobDescription string       `json:"jobDescription"`
+}
+
+type InterviewQuestion struct {
+	Question    string  `json:"question"`
+	Type        string  `json:"type"`
+	AnswerGuide *string `json:"answerGuide,omitempty"`
+}
+
 type Language struct {
 	Language    string `json:"language"`
 	Proficiency string `json:"proficiency"`
@@ -95,6 +106,10 @@ type ProjectInput struct {
 }
 
 type Query struct {
+}
+
+type QuestionsResponse struct {
+	Questions []*InterviewQuestion `json:"questions"`
 }
 
 type ResumeData struct {

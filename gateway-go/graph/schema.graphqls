@@ -188,3 +188,22 @@ extend type Mutation {
 extend type Query {
   listResumes(filter: ListResumesFilter): [SavedResume!]!
 }
+
+type InterviewQuestion {
+  question: String!
+  type: String!
+  answerGuide: String
+}
+
+type QuestionsResponse {
+  questions: [InterviewQuestion!]!
+}
+
+input InterviewPrepInput {
+  resume: ResumeInput!
+  jobDescription: String!
+}
+
+extend type Mutation {
+  generateInterviewQuestions(input: InterviewPrepInput!): QuestionsResponse!
+}

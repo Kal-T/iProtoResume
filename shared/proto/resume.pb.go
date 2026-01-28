@@ -745,6 +745,162 @@ func (x *TailorResponse) GetCoverLetter() string {
 	return ""
 }
 
+type InterviewPrepRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Resume         *ResumeData            `protobuf:"bytes,1,opt,name=resume,proto3" json:"resume,omitempty"`
+	JobDescription string                 `protobuf:"bytes,2,opt,name=job_description,json=jobDescription,proto3" json:"job_description,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *InterviewPrepRequest) Reset() {
+	*x = InterviewPrepRequest{}
+	mi := &file_shared_proto_resume_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *InterviewPrepRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*InterviewPrepRequest) ProtoMessage() {}
+
+func (x *InterviewPrepRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_shared_proto_resume_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use InterviewPrepRequest.ProtoReflect.Descriptor instead.
+func (*InterviewPrepRequest) Descriptor() ([]byte, []int) {
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *InterviewPrepRequest) GetResume() *ResumeData {
+	if x != nil {
+		return x.Resume
+	}
+	return nil
+}
+
+func (x *InterviewPrepRequest) GetJobDescription() string {
+	if x != nil {
+		return x.JobDescription
+	}
+	return ""
+}
+
+type InterviewQuestion struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Question      string                 `protobuf:"bytes,1,opt,name=question,proto3" json:"question,omitempty"`
+	Type          string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"` // Technical, Behavioral, Soft Skills
+	AnswerGuide   string                 `protobuf:"bytes,3,opt,name=answer_guide,json=answerGuide,proto3" json:"answer_guide,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *InterviewQuestion) Reset() {
+	*x = InterviewQuestion{}
+	mi := &file_shared_proto_resume_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *InterviewQuestion) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*InterviewQuestion) ProtoMessage() {}
+
+func (x *InterviewQuestion) ProtoReflect() protoreflect.Message {
+	mi := &file_shared_proto_resume_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use InterviewQuestion.ProtoReflect.Descriptor instead.
+func (*InterviewQuestion) Descriptor() ([]byte, []int) {
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *InterviewQuestion) GetQuestion() string {
+	if x != nil {
+		return x.Question
+	}
+	return ""
+}
+
+func (x *InterviewQuestion) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *InterviewQuestion) GetAnswerGuide() string {
+	if x != nil {
+		return x.AnswerGuide
+	}
+	return ""
+}
+
+type InterviewPrepResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Questions     []*InterviewQuestion   `protobuf:"bytes,1,rep,name=questions,proto3" json:"questions,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *InterviewPrepResponse) Reset() {
+	*x = InterviewPrepResponse{}
+	mi := &file_shared_proto_resume_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *InterviewPrepResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*InterviewPrepResponse) ProtoMessage() {}
+
+func (x *InterviewPrepResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_shared_proto_resume_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use InterviewPrepResponse.ProtoReflect.Descriptor instead.
+func (*InterviewPrepResponse) Descriptor() ([]byte, []int) {
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *InterviewPrepResponse) GetQuestions() []*InterviewQuestion {
+	if x != nil {
+		return x.Questions
+	}
+	return nil
+}
+
 type AnalyzeResumeRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	Resume         *ResumeData            `protobuf:"bytes,1,opt,name=resume,proto3" json:"resume,omitempty"`
@@ -755,7 +911,7 @@ type AnalyzeResumeRequest struct {
 
 func (x *AnalyzeResumeRequest) Reset() {
 	*x = AnalyzeResumeRequest{}
-	mi := &file_shared_proto_resume_proto_msgTypes[10]
+	mi := &file_shared_proto_resume_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -767,7 +923,7 @@ func (x *AnalyzeResumeRequest) String() string {
 func (*AnalyzeResumeRequest) ProtoMessage() {}
 
 func (x *AnalyzeResumeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_shared_proto_resume_proto_msgTypes[10]
+	mi := &file_shared_proto_resume_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -780,7 +936,7 @@ func (x *AnalyzeResumeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AnalyzeResumeRequest.ProtoReflect.Descriptor instead.
 func (*AnalyzeResumeRequest) Descriptor() ([]byte, []int) {
-	return file_shared_proto_resume_proto_rawDescGZIP(), []int{10}
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *AnalyzeResumeRequest) GetResume() *ResumeData {
@@ -809,7 +965,7 @@ type AnalyzeResumeResponse struct {
 
 func (x *AnalyzeResumeResponse) Reset() {
 	*x = AnalyzeResumeResponse{}
-	mi := &file_shared_proto_resume_proto_msgTypes[11]
+	mi := &file_shared_proto_resume_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -821,7 +977,7 @@ func (x *AnalyzeResumeResponse) String() string {
 func (*AnalyzeResumeResponse) ProtoMessage() {}
 
 func (x *AnalyzeResumeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_shared_proto_resume_proto_msgTypes[11]
+	mi := &file_shared_proto_resume_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -834,7 +990,7 @@ func (x *AnalyzeResumeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AnalyzeResumeResponse.ProtoReflect.Descriptor instead.
 func (*AnalyzeResumeResponse) Descriptor() ([]byte, []int) {
-	return file_shared_proto_resume_proto_rawDescGZIP(), []int{11}
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *AnalyzeResumeResponse) GetScore() int32 {
@@ -878,7 +1034,7 @@ type SavedResume struct {
 
 func (x *SavedResume) Reset() {
 	*x = SavedResume{}
-	mi := &file_shared_proto_resume_proto_msgTypes[12]
+	mi := &file_shared_proto_resume_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -890,7 +1046,7 @@ func (x *SavedResume) String() string {
 func (*SavedResume) ProtoMessage() {}
 
 func (x *SavedResume) ProtoReflect() protoreflect.Message {
-	mi := &file_shared_proto_resume_proto_msgTypes[12]
+	mi := &file_shared_proto_resume_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -903,7 +1059,7 @@ func (x *SavedResume) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SavedResume.ProtoReflect.Descriptor instead.
 func (*SavedResume) Descriptor() ([]byte, []int) {
-	return file_shared_proto_resume_proto_rawDescGZIP(), []int{12}
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *SavedResume) GetId() string {
@@ -952,7 +1108,7 @@ type SaveResumeRequest struct {
 
 func (x *SaveResumeRequest) Reset() {
 	*x = SaveResumeRequest{}
-	mi := &file_shared_proto_resume_proto_msgTypes[13]
+	mi := &file_shared_proto_resume_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -964,7 +1120,7 @@ func (x *SaveResumeRequest) String() string {
 func (*SaveResumeRequest) ProtoMessage() {}
 
 func (x *SaveResumeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_shared_proto_resume_proto_msgTypes[13]
+	mi := &file_shared_proto_resume_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -977,7 +1133,7 @@ func (x *SaveResumeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SaveResumeRequest.ProtoReflect.Descriptor instead.
 func (*SaveResumeRequest) Descriptor() ([]byte, []int) {
-	return file_shared_proto_resume_proto_rawDescGZIP(), []int{13}
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *SaveResumeRequest) GetResume() *ResumeData {
@@ -1010,7 +1166,7 @@ type ListResumesRequest struct {
 
 func (x *ListResumesRequest) Reset() {
 	*x = ListResumesRequest{}
-	mi := &file_shared_proto_resume_proto_msgTypes[14]
+	mi := &file_shared_proto_resume_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1022,7 +1178,7 @@ func (x *ListResumesRequest) String() string {
 func (*ListResumesRequest) ProtoMessage() {}
 
 func (x *ListResumesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_shared_proto_resume_proto_msgTypes[14]
+	mi := &file_shared_proto_resume_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1035,7 +1191,7 @@ func (x *ListResumesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListResumesRequest.ProtoReflect.Descriptor instead.
 func (*ListResumesRequest) Descriptor() ([]byte, []int) {
-	return file_shared_proto_resume_proto_rawDescGZIP(), []int{14}
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *ListResumesRequest) GetTags() []string {
@@ -1054,7 +1210,7 @@ type ListResumesResponse struct {
 
 func (x *ListResumesResponse) Reset() {
 	*x = ListResumesResponse{}
-	mi := &file_shared_proto_resume_proto_msgTypes[15]
+	mi := &file_shared_proto_resume_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1066,7 +1222,7 @@ func (x *ListResumesResponse) String() string {
 func (*ListResumesResponse) ProtoMessage() {}
 
 func (x *ListResumesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_shared_proto_resume_proto_msgTypes[15]
+	mi := &file_shared_proto_resume_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1079,7 +1235,7 @@ func (x *ListResumesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListResumesResponse.ProtoReflect.Descriptor instead.
 func (*ListResumesResponse) Descriptor() ([]byte, []int) {
-	return file_shared_proto_resume_proto_rawDescGZIP(), []int{15}
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *ListResumesResponse) GetResumes() []*SavedResume {
@@ -1098,7 +1254,7 @@ type DeleteResumeRequest struct {
 
 func (x *DeleteResumeRequest) Reset() {
 	*x = DeleteResumeRequest{}
-	mi := &file_shared_proto_resume_proto_msgTypes[16]
+	mi := &file_shared_proto_resume_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1110,7 +1266,7 @@ func (x *DeleteResumeRequest) String() string {
 func (*DeleteResumeRequest) ProtoMessage() {}
 
 func (x *DeleteResumeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_shared_proto_resume_proto_msgTypes[16]
+	mi := &file_shared_proto_resume_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1123,7 +1279,7 @@ func (x *DeleteResumeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteResumeRequest.ProtoReflect.Descriptor instead.
 func (*DeleteResumeRequest) Descriptor() ([]byte, []int) {
-	return file_shared_proto_resume_proto_rawDescGZIP(), []int{16}
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *DeleteResumeRequest) GetId() string {
@@ -1142,7 +1298,7 @@ type DeleteResumeResponse struct {
 
 func (x *DeleteResumeResponse) Reset() {
 	*x = DeleteResumeResponse{}
-	mi := &file_shared_proto_resume_proto_msgTypes[17]
+	mi := &file_shared_proto_resume_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1154,7 +1310,7 @@ func (x *DeleteResumeResponse) String() string {
 func (*DeleteResumeResponse) ProtoMessage() {}
 
 func (x *DeleteResumeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_shared_proto_resume_proto_msgTypes[17]
+	mi := &file_shared_proto_resume_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1167,7 +1323,7 @@ func (x *DeleteResumeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteResumeResponse.ProtoReflect.Descriptor instead.
 func (*DeleteResumeResponse) Descriptor() ([]byte, []int) {
-	return file_shared_proto_resume_proto_rawDescGZIP(), []int{17}
+	return file_shared_proto_resume_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *DeleteResumeResponse) GetSuccess() bool {
@@ -1245,6 +1401,15 @@ const file_shared_proto_resume_proto_rawDesc = "" +
 	"\x0eTailorResponse\x12;\n" +
 	"\x0ftailored_resume\x18\x01 \x01(\v2\x12.resume.ResumeDataR\x0etailoredResume\x12!\n" +
 	"\fcover_letter\x18\x02 \x01(\tR\vcoverLetter\"k\n" +
+	"\x14InterviewPrepRequest\x12*\n" +
+	"\x06resume\x18\x01 \x01(\v2\x12.resume.ResumeDataR\x06resume\x12'\n" +
+	"\x0fjob_description\x18\x02 \x01(\tR\x0ejobDescription\"f\n" +
+	"\x11InterviewQuestion\x12\x1a\n" +
+	"\bquestion\x18\x01 \x01(\tR\bquestion\x12\x12\n" +
+	"\x04type\x18\x02 \x01(\tR\x04type\x12!\n" +
+	"\fanswer_guide\x18\x03 \x01(\tR\vanswerGuide\"P\n" +
+	"\x15InterviewPrepResponse\x127\n" +
+	"\tquestions\x18\x01 \x03(\v2\x19.resume.InterviewQuestionR\tquestions\"k\n" +
 	"\x14AnalyzeResumeRequest\x12*\n" +
 	"\x06resume\x18\x01 \x01(\v2\x12.resume.ResumeDataR\x06resume\x12'\n" +
 	"\x0fjob_description\x18\x02 \x01(\tR\x0ejobDescription\"\x92\x01\n" +
@@ -1272,10 +1437,11 @@ const file_shared_proto_resume_proto_rawDesc = "" +
 	"\x13DeleteResumeRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"0\n" +
 	"\x14DeleteResumeResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess2\x98\x01\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess2\xf3\x01\n" +
 	"\tAIService\x12=\n" +
 	"\fTailorResume\x12\x15.resume.TailorRequest\x1a\x16.resume.TailorResponse\x12L\n" +
-	"\rAnalyzeResume\x12\x1c.resume.AnalyzeResumeRequest\x1a\x1d.resume.AnalyzeResumeResponse2\xeb\x01\n" +
+	"\rAnalyzeResume\x12\x1c.resume.AnalyzeResumeRequest\x1a\x1d.resume.AnalyzeResumeResponse\x12Y\n" +
+	"\x1aGenerateInterviewQuestions\x12\x1c.resume.InterviewPrepRequest\x1a\x1d.resume.InterviewPrepResponse2\xeb\x01\n" +
 	"\x18ResumePersistenceService\x12<\n" +
 	"\n" +
 	"SaveResume\x12\x19.resume.SaveResumeRequest\x1a\x13.resume.SavedResume\x12F\n" +
@@ -1294,7 +1460,7 @@ func file_shared_proto_resume_proto_rawDescGZIP() []byte {
 	return file_shared_proto_resume_proto_rawDescData
 }
 
-var file_shared_proto_resume_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_shared_proto_resume_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
 var file_shared_proto_resume_proto_goTypes = []any{
 	(*ResumeData)(nil),            // 0: resume.ResumeData
 	(*Experience)(nil),            // 1: resume.Experience
@@ -1306,14 +1472,17 @@ var file_shared_proto_resume_proto_goTypes = []any{
 	(*Achievement)(nil),           // 7: resume.Achievement
 	(*TailorRequest)(nil),         // 8: resume.TailorRequest
 	(*TailorResponse)(nil),        // 9: resume.TailorResponse
-	(*AnalyzeResumeRequest)(nil),  // 10: resume.AnalyzeResumeRequest
-	(*AnalyzeResumeResponse)(nil), // 11: resume.AnalyzeResumeResponse
-	(*SavedResume)(nil),           // 12: resume.SavedResume
-	(*SaveResumeRequest)(nil),     // 13: resume.SaveResumeRequest
-	(*ListResumesRequest)(nil),    // 14: resume.ListResumesRequest
-	(*ListResumesResponse)(nil),   // 15: resume.ListResumesResponse
-	(*DeleteResumeRequest)(nil),   // 16: resume.DeleteResumeRequest
-	(*DeleteResumeResponse)(nil),  // 17: resume.DeleteResumeResponse
+	(*InterviewPrepRequest)(nil),  // 10: resume.InterviewPrepRequest
+	(*InterviewQuestion)(nil),     // 11: resume.InterviewQuestion
+	(*InterviewPrepResponse)(nil), // 12: resume.InterviewPrepResponse
+	(*AnalyzeResumeRequest)(nil),  // 13: resume.AnalyzeResumeRequest
+	(*AnalyzeResumeResponse)(nil), // 14: resume.AnalyzeResumeResponse
+	(*SavedResume)(nil),           // 15: resume.SavedResume
+	(*SaveResumeRequest)(nil),     // 16: resume.SaveResumeRequest
+	(*ListResumesRequest)(nil),    // 17: resume.ListResumesRequest
+	(*ListResumesResponse)(nil),   // 18: resume.ListResumesResponse
+	(*DeleteResumeRequest)(nil),   // 19: resume.DeleteResumeRequest
+	(*DeleteResumeResponse)(nil),  // 20: resume.DeleteResumeResponse
 }
 var file_shared_proto_resume_proto_depIdxs = []int32{
 	1,  // 0: resume.ResumeData.experience:type_name -> resume.Experience
@@ -1325,25 +1494,29 @@ var file_shared_proto_resume_proto_depIdxs = []int32{
 	7,  // 6: resume.ResumeData.achievements:type_name -> resume.Achievement
 	0,  // 7: resume.TailorRequest.original_resume:type_name -> resume.ResumeData
 	0,  // 8: resume.TailorResponse.tailored_resume:type_name -> resume.ResumeData
-	0,  // 9: resume.AnalyzeResumeRequest.resume:type_name -> resume.ResumeData
-	0,  // 10: resume.SavedResume.resume_data:type_name -> resume.ResumeData
-	0,  // 11: resume.SaveResumeRequest.resume:type_name -> resume.ResumeData
-	12, // 12: resume.ListResumesResponse.resumes:type_name -> resume.SavedResume
-	8,  // 13: resume.AIService.TailorResume:input_type -> resume.TailorRequest
-	10, // 14: resume.AIService.AnalyzeResume:input_type -> resume.AnalyzeResumeRequest
-	13, // 15: resume.ResumePersistenceService.SaveResume:input_type -> resume.SaveResumeRequest
-	14, // 16: resume.ResumePersistenceService.ListResumes:input_type -> resume.ListResumesRequest
-	16, // 17: resume.ResumePersistenceService.DeleteResume:input_type -> resume.DeleteResumeRequest
-	9,  // 18: resume.AIService.TailorResume:output_type -> resume.TailorResponse
-	11, // 19: resume.AIService.AnalyzeResume:output_type -> resume.AnalyzeResumeResponse
-	12, // 20: resume.ResumePersistenceService.SaveResume:output_type -> resume.SavedResume
-	15, // 21: resume.ResumePersistenceService.ListResumes:output_type -> resume.ListResumesResponse
-	17, // 22: resume.ResumePersistenceService.DeleteResume:output_type -> resume.DeleteResumeResponse
-	18, // [18:23] is the sub-list for method output_type
-	13, // [13:18] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	0,  // 9: resume.InterviewPrepRequest.resume:type_name -> resume.ResumeData
+	11, // 10: resume.InterviewPrepResponse.questions:type_name -> resume.InterviewQuestion
+	0,  // 11: resume.AnalyzeResumeRequest.resume:type_name -> resume.ResumeData
+	0,  // 12: resume.SavedResume.resume_data:type_name -> resume.ResumeData
+	0,  // 13: resume.SaveResumeRequest.resume:type_name -> resume.ResumeData
+	15, // 14: resume.ListResumesResponse.resumes:type_name -> resume.SavedResume
+	8,  // 15: resume.AIService.TailorResume:input_type -> resume.TailorRequest
+	13, // 16: resume.AIService.AnalyzeResume:input_type -> resume.AnalyzeResumeRequest
+	10, // 17: resume.AIService.GenerateInterviewQuestions:input_type -> resume.InterviewPrepRequest
+	16, // 18: resume.ResumePersistenceService.SaveResume:input_type -> resume.SaveResumeRequest
+	17, // 19: resume.ResumePersistenceService.ListResumes:input_type -> resume.ListResumesRequest
+	19, // 20: resume.ResumePersistenceService.DeleteResume:input_type -> resume.DeleteResumeRequest
+	9,  // 21: resume.AIService.TailorResume:output_type -> resume.TailorResponse
+	14, // 22: resume.AIService.AnalyzeResume:output_type -> resume.AnalyzeResumeResponse
+	12, // 23: resume.AIService.GenerateInterviewQuestions:output_type -> resume.InterviewPrepResponse
+	15, // 24: resume.ResumePersistenceService.SaveResume:output_type -> resume.SavedResume
+	18, // 25: resume.ResumePersistenceService.ListResumes:output_type -> resume.ListResumesResponse
+	20, // 26: resume.ResumePersistenceService.DeleteResume:output_type -> resume.DeleteResumeResponse
+	21, // [21:27] is the sub-list for method output_type
+	15, // [15:21] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_shared_proto_resume_proto_init() }
@@ -1357,7 +1530,7 @@ func file_shared_proto_resume_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_shared_proto_resume_proto_rawDesc), len(file_shared_proto_resume_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   18,
+			NumMessages:   21,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

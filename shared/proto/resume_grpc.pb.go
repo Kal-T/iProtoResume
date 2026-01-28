@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AIService_TailorResume_FullMethodName  = "/resume.AIService/TailorResume"
-	AIService_AnalyzeResume_FullMethodName = "/resume.AIService/AnalyzeResume"
+	AIService_TailorResume_FullMethodName               = "/resume.AIService/TailorResume"
+	AIService_AnalyzeResume_FullMethodName              = "/resume.AIService/AnalyzeResume"
+	AIService_GenerateInterviewQuestions_FullMethodName = "/resume.AIService/GenerateInterviewQuestions"
 )
 
 // AIServiceClient is the client API for AIService service.
@@ -29,6 +30,7 @@ const (
 type AIServiceClient interface {
 	TailorResume(ctx context.Context, in *TailorRequest, opts ...grpc.CallOption) (*TailorResponse, error)
 	AnalyzeResume(ctx context.Context, in *AnalyzeResumeRequest, opts ...grpc.CallOption) (*AnalyzeResumeResponse, error)
+	GenerateInterviewQuestions(ctx context.Context, in *InterviewPrepRequest, opts ...grpc.CallOption) (*InterviewPrepResponse, error)
 }
 
 type aIServiceClient struct {
@@ -59,12 +61,23 @@ func (c *aIServiceClient) AnalyzeResume(ctx context.Context, in *AnalyzeResumeRe
 	return out, nil
 }
 
+func (c *aIServiceClient) GenerateInterviewQuestions(ctx context.Context, in *InterviewPrepRequest, opts ...grpc.CallOption) (*InterviewPrepResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(InterviewPrepResponse)
+	err := c.cc.Invoke(ctx, AIService_GenerateInterviewQuestions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AIServiceServer is the server API for AIService service.
 // All implementations must embed UnimplementedAIServiceServer
 // for forward compatibility.
 type AIServiceServer interface {
 	TailorResume(context.Context, *TailorRequest) (*TailorResponse, error)
 	AnalyzeResume(context.Context, *AnalyzeResumeRequest) (*AnalyzeResumeResponse, error)
+	GenerateInterviewQuestions(context.Context, *InterviewPrepRequest) (*InterviewPrepResponse, error)
 	mustEmbedUnimplementedAIServiceServer()
 }
 
@@ -80,6 +93,9 @@ func (UnimplementedAIServiceServer) TailorResume(context.Context, *TailorRequest
 }
 func (UnimplementedAIServiceServer) AnalyzeResume(context.Context, *AnalyzeResumeRequest) (*AnalyzeResumeResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method AnalyzeResume not implemented")
+}
+func (UnimplementedAIServiceServer) GenerateInterviewQuestions(context.Context, *InterviewPrepRequest) (*InterviewPrepResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GenerateInterviewQuestions not implemented")
 }
 func (UnimplementedAIServiceServer) mustEmbedUnimplementedAIServiceServer() {}
 func (UnimplementedAIServiceServer) testEmbeddedByValue()                   {}
@@ -138,6 +154,24 @@ func _AIService_AnalyzeResume_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AIService_GenerateInterviewQuestions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(InterviewPrepRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AIServiceServer).GenerateInterviewQuestions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AIService_GenerateInterviewQuestions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AIServiceServer).GenerateInterviewQuestions(ctx, req.(*InterviewPrepRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AIService_ServiceDesc is the grpc.ServiceDesc for AIService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -152,6 +186,10 @@ var AIService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AnalyzeResume",
 			Handler:    _AIService_AnalyzeResume_Handler,
+		},
+		{
+			MethodName: "GenerateInterviewQuestions",
+			Handler:    _AIService_GenerateInterviewQuestions_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

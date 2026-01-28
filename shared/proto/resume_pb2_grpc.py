@@ -44,6 +44,11 @@ class AIServiceStub(object):
                 request_serializer=shared_dot_proto_dot_resume__pb2.AnalyzeResumeRequest.SerializeToString,
                 response_deserializer=shared_dot_proto_dot_resume__pb2.AnalyzeResumeResponse.FromString,
                 _registered_method=True)
+        self.GenerateInterviewQuestions = channel.unary_unary(
+                '/resume.AIService/GenerateInterviewQuestions',
+                request_serializer=shared_dot_proto_dot_resume__pb2.InterviewPrepRequest.SerializeToString,
+                response_deserializer=shared_dot_proto_dot_resume__pb2.InterviewPrepResponse.FromString,
+                _registered_method=True)
 
 
 class AIServiceServicer(object):
@@ -61,6 +66,12 @@ class AIServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GenerateInterviewQuestions(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_AIServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -73,6 +84,11 @@ def add_AIServiceServicer_to_server(servicer, server):
                     servicer.AnalyzeResume,
                     request_deserializer=shared_dot_proto_dot_resume__pb2.AnalyzeResumeRequest.FromString,
                     response_serializer=shared_dot_proto_dot_resume__pb2.AnalyzeResumeResponse.SerializeToString,
+            ),
+            'GenerateInterviewQuestions': grpc.unary_unary_rpc_method_handler(
+                    servicer.GenerateInterviewQuestions,
+                    request_deserializer=shared_dot_proto_dot_resume__pb2.InterviewPrepRequest.FromString,
+                    response_serializer=shared_dot_proto_dot_resume__pb2.InterviewPrepResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -129,6 +145,33 @@ class AIService(object):
             '/resume.AIService/AnalyzeResume',
             shared_dot_proto_dot_resume__pb2.AnalyzeResumeRequest.SerializeToString,
             shared_dot_proto_dot_resume__pb2.AnalyzeResumeResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GenerateInterviewQuestions(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/resume.AIService/GenerateInterviewQuestions',
+            shared_dot_proto_dot_resume__pb2.InterviewPrepRequest.SerializeToString,
+            shared_dot_proto_dot_resume__pb2.InterviewPrepResponse.FromString,
             options,
             channel_credentials,
             insecure,

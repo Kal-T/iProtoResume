@@ -88,6 +88,24 @@ message TailorResponse {
 service AIService {
   rpc TailorResume (TailorRequest) returns (TailorResponse);
   rpc AnalyzeResume (AnalyzeResumeRequest) returns (AnalyzeResumeResponse);
+  rpc GenerateInterviewQuestions (InterviewPrepRequest) returns (InterviewPrepResponse);
+}
+
+// ... existing messages ...
+
+message InterviewPrepRequest {
+  ResumeData resume = 1;
+  string job_description = 2;
+}
+
+message InterviewQuestion {
+  string question = 1;
+  string type = 2; // Technical, Behavioral, Soft Skills
+  string answer_guide = 3;
+}
+
+message InterviewPrepResponse {
+  repeated InterviewQuestion questions = 1;
 }
 
 message AnalyzeResumeRequest {
