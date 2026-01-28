@@ -40,8 +40,8 @@ graph TD
     GW -->|gRPC| RAG
     GW -->|gRPC| ATS
     RAG -->|Vector Search| VecDB
-    ATS -->|Scoring Logic| ATS
-    GW -->|SQL| DB
+    ATS -->|Scoring & Persistence| ATS
+    ATS -->|SQL| DB
 ```
 
 ## 🛠 Tech Stack
@@ -51,7 +51,7 @@ graph TD
 | **Frontend** | React, TailwindCSS, Vite | Responsive, modern UI/UX with real-time previews. |
 | **Gateway** | Go, gqlgen | GraphQL entry point, request orchestration. |
 | **RAG Service** | Python, gRPC, Gemini, ChromaDB | AI logic for tailoring, cover letters, and semantic search. |
-| **ATS Service** | Go, gRPC | Orchestrates scoring and analysis. |
+| **ATS Service** | Go, gRPC | Orchestrates scoring, analysis, and data persistence. |
 | **Data** | PostgreSQL, ChromaDB | User data & Vector embeddings. |
 | **Infra** | Docker Compose | Optimized for local dev (Apple Silicon/M-series support). |
 
