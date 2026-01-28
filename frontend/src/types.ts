@@ -81,6 +81,7 @@ export interface ATSScore {
     score: number;
     missingKeywords: string[];
     feedback: string[];
+    reasoning?: string;
 }
 
 export interface TailorResponse {

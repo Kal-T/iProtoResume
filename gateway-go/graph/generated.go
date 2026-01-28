@@ -50,6 +50,7 @@ type ComplexityRoot struct {
 	ATSScore struct {
 		Feedback        func(childComplexity int) int
 		MissingKeywords func(childComplexity int) int
+		Reasoning       func(childComplexity int) int
 		Score           func(childComplexity int) int
 	}
 
@@ -186,6 +187,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.ATSScore.MissingKeywords(childComplexity), true
+	case "ATSScore.reasoning":
+		if e.complexity.ATSScore.Reasoning == nil {
+			break
+		}
+
+		return e.complexity.ATSScore.Reasoning(childComplexity), true
 	case "ATSScore.score":
 		if e.complexity.ATSScore.Score == nil {
 			break
@@ -895,6 +902,35 @@ func (ec *executionContext) fieldContext_ATSScore_missingKeywords(_ context.Cont
 	return fc, nil
 }
 
+func (ec *executionContext) _ATSScore_reasoning(ctx context.Context, field graphql.CollectedField, obj *model.ATSScore) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ATSScore_reasoning,
+		func(ctx context.Context) (any, error) {
+			return obj.Reasoning, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_ATSScore_reasoning(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ATSScore",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Achievement_title(ctx context.Context, field graphql.CollectedField, obj *model.Achievement) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -1437,6 +1473,8 @@ func (ec *executionContext) fieldContext_Mutation_validateResume(ctx context.Con
 				return ec.fieldContext_ATSScore_feedback(ctx, field)
 			case "missingKeywords":
 				return ec.fieldContext_ATSScore_missingKeywords(ctx, field)
+			case "reasoning":
+				return ec.fieldContext_ATSScore_reasoning(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type ATSScore", field.Name)
 		},
@@ -4866,6 +4904,8 @@ func (ec *executionContext) _ATSScore(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "reasoning":
+			out.Values[i] = ec._ATSScore_reasoning(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

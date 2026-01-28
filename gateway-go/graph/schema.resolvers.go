@@ -54,9 +54,24 @@ func (r *mutationResolver) TailorResume(ctx context.Context, input model.TailorR
 func (r *mutationResolver) ValidateResume(ctx context.Context, input model.ValidateResumeInput) (*model.ATSScore, error) {
 	req := &pb.ValidationRequest{
 		Resume: &pb.ResumeData{
-			FullName: input.Resume.FullName,
-			Email:    input.Resume.Email,
-			Skills:   input.Resume.Skills,
+			FullName:     input.Resume.FullName,
+			Email:        input.Resume.Email,
+			Phone:        getStringValue(input.Resume.Phone),
+			Summary:      getStringValue(input.Resume.Summary),
+			Skills:       input.Resume.Skills,
+			Experience:   mapExperienceInput(input.Resume.Experience),
+			Education:    mapEducationInput(input.Resume.Education),
+			Projects:     mapProjectInput(input.Resume.Projects),
+			Certificates: mapCertificateInput(input.Resume.Certificates),
+			JobTitle:     getStringValue(input.Resume.JobTitle),
+			Location:     getStringValue(input.Resume.Location),
+			Linkedin:     getStringValue(input.Resume.Linkedin),
+			Github:       getStringValue(input.Resume.Github),
+			Website:      getStringValue(input.Resume.Website),
+			ProfileImage: getStringValue(input.Resume.ProfileImage),
+			SkillGroups:  mapSkillGroupInput(input.Resume.SkillGroups),
+			Languages:    mapLanguageInput(input.Resume.Languages),
+			Achievements: mapAchievementInput(input.Resume.Achievements),
 		},
 		JobDescription: input.JobDescription,
 	}
@@ -70,6 +85,7 @@ func (r *mutationResolver) ValidateResume(ctx context.Context, input model.Valid
 		Score:           resp.Score,
 		Feedback:        resp.Feedback,
 		MissingKeywords: resp.MissingKeywords,
+		Reasoning:       &resp.Reasoning,
 	}, nil
 }
 
@@ -173,9 +189,8 @@ type queryResolver struct{ *Resolver }
 //  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
 //    it when you're done.
 //  - You have helper methods in this file. Move them out to keep these resolver files clean.
-
-// Helper functions for mapping types
-func mapExperienceInput(inputs []*model.ExperienceInput) []*pb.Experience {
+/*
+	func mapExperienceInput(inputs []*model.ExperienceInput) []*pb.Experience {
 	var results []*pb.Experience
 	for _, in := range inputs {
 		results = append(results, &pb.Experience{
@@ -356,3 +371,4 @@ func getStringValue(s *string) string {
 	}
 	return *s
 }
+*/

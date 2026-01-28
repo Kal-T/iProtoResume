@@ -78,6 +78,7 @@ type ATSScore struct {
 	Score           int32                  `protobuf:"varint,1,opt,name=score,proto3" json:"score,omitempty"` // 0-100
 	Feedback        []string               `protobuf:"bytes,2,rep,name=feedback,proto3" json:"feedback,omitempty"`
 	MissingKeywords []string               `protobuf:"bytes,3,rep,name=missing_keywords,json=missingKeywords,proto3" json:"missing_keywords,omitempty"`
+	Reasoning       string                 `protobuf:"bytes,4,opt,name=reasoning,proto3" json:"reasoning,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -133,6 +134,13 @@ func (x *ATSScore) GetMissingKeywords() []string {
 	return nil
 }
 
+func (x *ATSScore) GetReasoning() string {
+	if x != nil {
+		return x.Reasoning
+	}
+	return ""
+}
+
 var File_shared_proto_ats_proto protoreflect.FileDescriptor
 
 const file_shared_proto_ats_proto_rawDesc = "" +
@@ -140,11 +148,12 @@ const file_shared_proto_ats_proto_rawDesc = "" +
 	"\x16shared/proto/ats.proto\x12\x03ats\x1a\x19shared/proto/resume.proto\"h\n" +
 	"\x11ValidationRequest\x12*\n" +
 	"\x06resume\x18\x01 \x01(\v2\x12.resume.ResumeDataR\x06resume\x12'\n" +
-	"\x0fjob_description\x18\x02 \x01(\tR\x0ejobDescription\"g\n" +
+	"\x0fjob_description\x18\x02 \x01(\tR\x0ejobDescription\"\x85\x01\n" +
 	"\bATSScore\x12\x14\n" +
 	"\x05score\x18\x01 \x01(\x05R\x05score\x12\x1a\n" +
 	"\bfeedback\x18\x02 \x03(\tR\bfeedback\x12)\n" +
-	"\x10missing_keywords\x18\x03 \x03(\tR\x0fmissingKeywords2E\n" +
+	"\x10missing_keywords\x18\x03 \x03(\tR\x0fmissingKeywords\x12\x1c\n" +
+	"\treasoning\x18\x04 \x01(\tR\treasoning2E\n" +
 	"\n" +
 	"ATSService\x127\n" +
 	"\x0eValidateResume\x12\x16.ats.ValidationRequest\x1a\r.ats.ATSScoreB&Z$github.com/iprotoresume/shared/protob\x06proto3"

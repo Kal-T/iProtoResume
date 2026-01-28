@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19shared/proto/resume.proto\x12\x06resume\"\xe3\x03\n\nResumeData\x12\x11\n\tfull_name\x18\x01 \x01(\t\x12\r\n\x05\x65mail\x18\x02 \x01(\t\x12\r\n\x05phone\x18\x03 \x01(\t\x12\x0f\n\x07summary\x18\x04 \x01(\t\x12\x0e\n\x06skills\x18\x05 \x03(\t\x12&\n\nexperience\x18\x06 \x03(\x0b\x32\x12.resume.Experience\x12$\n\teducation\x18\x07 \x03(\x0b\x32\x11.resume.Education\x12!\n\x08projects\x18\x08 \x03(\x0b\x32\x0f.resume.Project\x12)\n\x0c\x63\x65rtificates\x18\t \x03(\x0b\x32\x13.resume.Certificate\x12\x11\n\tjob_title\x18\n \x01(\t\x12\x10\n\x08location\x18\x0b \x01(\t\x12\x10\n\x08linkedin\x18\x0c \x01(\t\x12\x0e\n\x06github\x18\r \x01(\t\x12\x0f\n\x07website\x18\x0e \x01(\t\x12\x15\n\rprofile_image\x18\x12 \x01(\t\x12(\n\x0cskill_groups\x18\x0f \x03(\x0b\x32\x12.resume.SkillGroup\x12#\n\tlanguages\x18\x10 \x03(\x0b\x32\x10.resume.Language\x12)\n\x0c\x61\x63hievements\x18\x11 \x03(\x0b\x32\x13.resume.Achievement\"g\n\nExperience\x12\r\n\x05title\x18\x01 \x01(\t\x12\x0f\n\x07\x63ompany\x18\x02 \x01(\t\x12\x12\n\nstart_date\x18\x03 \x01(\t\x12\x10\n\x08\x65nd_date\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\"I\n\tEducation\x12\x0e\n\x06\x64\x65gree\x18\x01 \x01(\t\x12\x13\n\x0binstitution\x18\x02 \x01(\t\x12\x17\n\x0fgraduation_date\x18\x03 \x01(\t\"a\n\x07Project\x12\r\n\x05title\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\x12\n\ntech_stack\x18\x03 \x03(\t\x12\x0c\n\x04\x64\x61te\x18\x04 \x01(\t\x12\x10\n\x08location\x18\x05 \x01(\t\"G\n\x0b\x43\x65rtificate\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0e\n\x06issuer\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x03 \x01(\t\x12\x0c\n\x04link\x18\x04 \x01(\t\"-\n\nSkillGroup\x12\x10\n\x08\x63\x61tegory\x18\x01 \x01(\t\x12\r\n\x05items\x18\x02 \x03(\t\"1\n\x08Language\x12\x10\n\x08language\x18\x01 \x01(\t\x12\x13\n\x0bproficiency\x18\x02 \x01(\t\"1\n\x0b\x41\x63hievement\x12\r\n\x05title\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\"U\n\rTailorRequest\x12+\n\x0foriginal_resume\x18\x01 \x01(\x0b\x32\x12.resume.ResumeData\x12\x17\n\x0fjob_description\x18\x02 \x01(\t\"S\n\x0eTailorResponse\x12+\n\x0ftailored_resume\x18\x01 \x01(\x0b\x32\x12.resume.ResumeData\x12\x14\n\x0c\x63over_letter\x18\x02 \x01(\t\"u\n\x0bSavedResume\x12\n\n\x02id\x18\x01 \x01(\t\x12\'\n\x0bresume_data\x18\x02 \x01(\x0b\x32\x12.resume.ResumeData\x12\x0c\n\x04tags\x18\x03 \x03(\t\x12\x0f\n\x07version\x18\x04 \x01(\t\x12\x12\n\ncreated_at\x18\x05 \x01(\t\"V\n\x11SaveResumeRequest\x12\"\n\x06resume\x18\x01 \x01(\x0b\x32\x12.resume.ResumeData\x12\x0c\n\x04tags\x18\x02 \x03(\t\x12\x0f\n\x07version\x18\x03 \x01(\t\"\"\n\x12ListResumesRequest\x12\x0c\n\x04tags\x18\x01 \x03(\t\";\n\x13ListResumesResponse\x12$\n\x07resumes\x18\x01 \x03(\x0b\x32\x13.resume.SavedResume\"!\n\x13\x44\x65leteResumeRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\'\n\x14\x44\x65leteResumeResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32N\n\rResumeService\x12=\n\x0cTailorResume\x12\x15.resume.TailorRequest\x1a\x16.resume.TailorResponse2\xeb\x01\n\x18ResumePersistenceService\x12<\n\nSaveResume\x12\x19.resume.SaveResumeRequest\x1a\x13.resume.SavedResume\x12\x46\n\x0bListResumes\x12\x1a.resume.ListResumesRequest\x1a\x1b.resume.ListResumesResponse\x12I\n\x0c\x44\x65leteResume\x12\x1b.resume.DeleteResumeRequest\x1a\x1c.resume.DeleteResumeResponseB&Z$github.com/iprotoresume/shared/protob\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19shared/proto/resume.proto\x12\x06resume\"\xe3\x03\n\nResumeData\x12\x11\n\tfull_name\x18\x01 \x01(\t\x12\r\n\x05\x65mail\x18\x02 \x01(\t\x12\r\n\x05phone\x18\x03 \x01(\t\x12\x0f\n\x07summary\x18\x04 \x01(\t\x12\x0e\n\x06skills\x18\x05 \x03(\t\x12&\n\nexperience\x18\x06 \x03(\x0b\x32\x12.resume.Experience\x12$\n\teducation\x18\x07 \x03(\x0b\x32\x11.resume.Education\x12!\n\x08projects\x18\x08 \x03(\x0b\x32\x0f.resume.Project\x12)\n\x0c\x63\x65rtificates\x18\t \x03(\x0b\x32\x13.resume.Certificate\x12\x11\n\tjob_title\x18\n \x01(\t\x12\x10\n\x08location\x18\x0b \x01(\t\x12\x10\n\x08linkedin\x18\x0c \x01(\t\x12\x0e\n\x06github\x18\r \x01(\t\x12\x0f\n\x07website\x18\x0e \x01(\t\x12\x15\n\rprofile_image\x18\x12 \x01(\t\x12(\n\x0cskill_groups\x18\x0f \x03(\x0b\x32\x12.resume.SkillGroup\x12#\n\tlanguages\x18\x10 \x03(\x0b\x32\x10.resume.Language\x12)\n\x0c\x61\x63hievements\x18\x11 \x03(\x0b\x32\x13.resume.Achievement\"g\n\nExperience\x12\r\n\x05title\x18\x01 \x01(\t\x12\x0f\n\x07\x63ompany\x18\x02 \x01(\t\x12\x12\n\nstart_date\x18\x03 \x01(\t\x12\x10\n\x08\x65nd_date\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\"I\n\tEducation\x12\x0e\n\x06\x64\x65gree\x18\x01 \x01(\t\x12\x13\n\x0binstitution\x18\x02 \x01(\t\x12\x17\n\x0fgraduation_date\x18\x03 \x01(\t\"a\n\x07Project\x12\r\n\x05title\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\x12\n\ntech_stack\x18\x03 \x03(\t\x12\x0c\n\x04\x64\x61te\x18\x04 \x01(\t\x12\x10\n\x08location\x18\x05 \x01(\t\"G\n\x0b\x43\x65rtificate\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0e\n\x06issuer\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x03 \x01(\t\x12\x0c\n\x04link\x18\x04 \x01(\t\"-\n\nSkillGroup\x12\x10\n\x08\x63\x61tegory\x18\x01 \x01(\t\x12\r\n\x05items\x18\x02 \x03(\t\"1\n\x08Language\x12\x10\n\x08language\x18\x01 \x01(\t\x12\x13\n\x0bproficiency\x18\x02 \x01(\t\"1\n\x0b\x41\x63hievement\x12\r\n\x05title\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\"U\n\rTailorRequest\x12+\n\x0foriginal_resume\x18\x01 \x01(\x0b\x32\x12.resume.ResumeData\x12\x17\n\x0fjob_description\x18\x02 \x01(\t\"S\n\x0eTailorResponse\x12+\n\x0ftailored_resume\x18\x01 \x01(\x0b\x32\x12.resume.ResumeData\x12\x14\n\x0c\x63over_letter\x18\x02 \x01(\t\"S\n\x14\x41nalyzeResumeRequest\x12\"\n\x06resume\x18\x01 \x01(\x0b\x32\x12.resume.ResumeData\x12\x17\n\x0fjob_description\x18\x02 \x01(\t\"e\n\x15\x41nalyzeResumeResponse\x12\r\n\x05score\x18\x01 \x01(\x05\x12\x10\n\x08\x66\x65\x65\x64\x62\x61\x63k\x18\x02 \x03(\t\x12\x18\n\x10missing_keywords\x18\x03 \x03(\t\x12\x11\n\treasoning\x18\x04 \x01(\t\"u\n\x0bSavedResume\x12\n\n\x02id\x18\x01 \x01(\t\x12\'\n\x0bresume_data\x18\x02 \x01(\x0b\x32\x12.resume.ResumeData\x12\x0c\n\x04tags\x18\x03 \x03(\t\x12\x0f\n\x07version\x18\x04 \x01(\t\x12\x12\n\ncreated_at\x18\x05 \x01(\t\"V\n\x11SaveResumeRequest\x12\"\n\x06resume\x18\x01 \x01(\x0b\x32\x12.resume.ResumeData\x12\x0c\n\x04tags\x18\x02 \x03(\t\x12\x0f\n\x07version\x18\x03 \x01(\t\"\"\n\x12ListResumesRequest\x12\x0c\n\x04tags\x18\x01 \x03(\t\";\n\x13ListResumesResponse\x12$\n\x07resumes\x18\x01 \x03(\x0b\x32\x13.resume.SavedResume\"!\n\x13\x44\x65leteResumeRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\'\n\x14\x44\x65leteResumeResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\x9c\x01\n\rResumeService\x12=\n\x0cTailorResume\x12\x15.resume.TailorRequest\x1a\x16.resume.TailorResponse\x12L\n\rAnalyzeResume\x12\x1c.resume.AnalyzeResumeRequest\x1a\x1d.resume.AnalyzeResumeResponse2\xeb\x01\n\x18ResumePersistenceService\x12<\n\nSaveResume\x12\x19.resume.SaveResumeRequest\x1a\x13.resume.SavedResume\x12\x46\n\x0bListResumes\x12\x1a.resume.ListResumesRequest\x1a\x1b.resume.ListResumesResponse\x12I\n\x0c\x44\x65leteResume\x12\x1b.resume.DeleteResumeRequest\x1a\x1c.resume.DeleteResumeResponseB&Z$github.com/iprotoresume/shared/protob\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -52,20 +52,24 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_TAILORREQUEST']._serialized_end=1109
   _globals['_TAILORRESPONSE']._serialized_start=1111
   _globals['_TAILORRESPONSE']._serialized_end=1194
-  _globals['_SAVEDRESUME']._serialized_start=1196
-  _globals['_SAVEDRESUME']._serialized_end=1313
-  _globals['_SAVERESUMEREQUEST']._serialized_start=1315
-  _globals['_SAVERESUMEREQUEST']._serialized_end=1401
-  _globals['_LISTRESUMESREQUEST']._serialized_start=1403
-  _globals['_LISTRESUMESREQUEST']._serialized_end=1437
-  _globals['_LISTRESUMESRESPONSE']._serialized_start=1439
-  _globals['_LISTRESUMESRESPONSE']._serialized_end=1498
-  _globals['_DELETERESUMEREQUEST']._serialized_start=1500
-  _globals['_DELETERESUMEREQUEST']._serialized_end=1533
-  _globals['_DELETERESUMERESPONSE']._serialized_start=1535
-  _globals['_DELETERESUMERESPONSE']._serialized_end=1574
-  _globals['_RESUMESERVICE']._serialized_start=1576
-  _globals['_RESUMESERVICE']._serialized_end=1654
-  _globals['_RESUMEPERSISTENCESERVICE']._serialized_start=1657
-  _globals['_RESUMEPERSISTENCESERVICE']._serialized_end=1892
+  _globals['_ANALYZERESUMEREQUEST']._serialized_start=1196
+  _globals['_ANALYZERESUMEREQUEST']._serialized_end=1279
+  _globals['_ANALYZERESUMERESPONSE']._serialized_start=1281
+  _globals['_ANALYZERESUMERESPONSE']._serialized_end=1382
+  _globals['_SAVEDRESUME']._serialized_start=1384
+  _globals['_SAVEDRESUME']._serialized_end=1501
+  _globals['_SAVERESUMEREQUEST']._serialized_start=1503
+  _globals['_SAVERESUMEREQUEST']._serialized_end=1589
+  _globals['_LISTRESUMESREQUEST']._serialized_start=1591
+  _globals['_LISTRESUMESREQUEST']._serialized_end=1625
+  _globals['_LISTRESUMESRESPONSE']._serialized_start=1627
+  _globals['_LISTRESUMESRESPONSE']._serialized_end=1686
+  _globals['_DELETERESUMEREQUEST']._serialized_start=1688
+  _globals['_DELETERESUMEREQUEST']._serialized_end=1721
+  _globals['_DELETERESUMERESPONSE']._serialized_start=1723
+  _globals['_DELETERESUMERESPONSE']._serialized_end=1762
+  _globals['_RESUMESERVICE']._serialized_start=1765
+  _globals['_RESUMESERVICE']._serialized_end=1921
+  _globals['_RESUMEPERSISTENCESERVICE']._serialized_start=1924
+  _globals['_RESUMEPERSISTENCESERVICE']._serialized_end=2159
 # @@protoc_insertion_point(module_scope)

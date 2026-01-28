@@ -14,6 +14,7 @@ const VALIDATE_RESUME = gql`
       score
       feedback
       missingKeywords
+      reasoning
     }
   }
 `;

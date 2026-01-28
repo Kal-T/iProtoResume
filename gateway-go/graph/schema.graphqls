@@ -74,6 +74,7 @@ type ATSScore {
   score: Int!
   feedback: [String!]!
   missingKeywords: [String!]!
+  reasoning: String
 }
 
 input ResumeInput {

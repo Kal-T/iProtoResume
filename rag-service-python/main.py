@@ -125,6 +125,85 @@ class ResumeService(resume_pb2_grpc.ResumeServiceServicer):
             context.set_code(grpc.StatusCode.INTERNAL)
             return resume_pb2.TailorResponse()
 
+    def AnalyzeResume(self, request, context):
+        logger.info(f"Received AnalyzeResume request")
+        
+        try:
+            llm = LLMFactory.create_llm(provider="gemini")
+            
+            # --- 1. Prepare Data ---
+            from google.protobuf import json_format
+            resume_dict = json_format.MessageToDict(request.resume, preserving_proto_field_name=True)
+            
+            # --- 2. Construct Prompt ---
+            system_instruction = """
+            You are an expert ATS (Applicant Tracking System) Auditor.
+            Your task is to evaluate a resume against a Job Description (JD) and provide a strict semantic analysis.
+            
+            ### CRITERIA
+            1. **Relevance**: How well do the skills and experience match the JD?
+            2. **Impact**: Does the resume use action verbs and metrics?
+            3. **Keyword Matching**: Are critical hard skills present (even if synonyms are used)?
+            
+            ### OUTPUT FORMAT
+            Return a purely valid JSON object with the following fields:
+            - "score": Integer (0-100).
+            - "reasoning": A concise paragraph (max 3 sentences) explaining the score. Focus on the 'Why'.
+            - "feedback": A list of strings (3-5 items) with specific actionable advice.
+            - "missing_keywords": A list of strings (hard skills/technologies) found in JD but missing in Resume.
+            
+            Ensure the JSON is valid. Do not use markdown blocks.
+            """
+            
+            human_instruction = f"""
+            ### JOB DESCRIPTION
+            {request.job_description}
+            
+            ### RESUME DATA
+            {resume_dict}
+            """
+            
+            from langchain_core.messages import SystemMessage, HumanMessage
+            messages = [
+                SystemMessage(content=system_instruction),
+                HumanMessage(content=human_instruction)
+            ]
+            
+            # --- 3. Call LLM ---
+            logger.info("Sending Analysis request to LLM...")
+            response = llm.invoke(messages)
+            
+            # --- 4. Parse Response ---
+            import json
+            import re
+            
+            content = response.content
+            if isinstance(content, list):
+                content = "".join(part.get('text', '') if isinstance(part, dict) else str(part) for part in content)
+            
+            content = re.sub(r'```json\n|\n```', '', str(content)).strip()
+            content = re.sub(r'```\n|\n```', '', content).strip()
+            
+            try:
+                data = json.loads(content)
+            except json.JSONDecodeError:
+                # Fallback if JSON fails
+                logger.error("Failed to parse Analysis JSON")
+                data = {"score": 0, "reasoning": "Analysis failed", "feedback": [], "missing_keywords": []}
+
+            return resume_pb2.AnalyzeResumeResponse(
+                score=data.get("score", 0),
+                reasoning=data.get("reasoning", "No reasoning provided"),
+                feedback=data.get("feedback", []),
+                missing_keywords=data.get("missing_keywords", [])
+            )
+
+        except Exception as e:
+            logger.error(f"Error analyzing resume: {str(e)}")
+            context.set_details(str(e))
+            context.set_code(grpc.StatusCode.INTERNAL)
+            return resume_pb2.AnalyzeResumeResponse()
+
 from config import settings
 
 def serve():

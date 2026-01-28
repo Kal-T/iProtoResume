@@ -39,12 +39,23 @@ class ResumeServiceStub(object):
                 request_serializer=shared_dot_proto_dot_resume__pb2.TailorRequest.SerializeToString,
                 response_deserializer=shared_dot_proto_dot_resume__pb2.TailorResponse.FromString,
                 _registered_method=True)
+        self.AnalyzeResume = channel.unary_unary(
+                '/resume.ResumeService/AnalyzeResume',
+                request_serializer=shared_dot_proto_dot_resume__pb2.AnalyzeResumeRequest.SerializeToString,
+                response_deserializer=shared_dot_proto_dot_resume__pb2.AnalyzeResumeResponse.FromString,
+                _registered_method=True)
 
 
 class ResumeServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def TailorResume(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def AnalyzeResume(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -57,6 +68,11 @@ def add_ResumeServiceServicer_to_server(servicer, server):
                     servicer.TailorResume,
                     request_deserializer=shared_dot_proto_dot_resume__pb2.TailorRequest.FromString,
                     response_serializer=shared_dot_proto_dot_resume__pb2.TailorResponse.SerializeToString,
+            ),
+            'AnalyzeResume': grpc.unary_unary_rpc_method_handler(
+                    servicer.AnalyzeResume,
+                    request_deserializer=shared_dot_proto_dot_resume__pb2.AnalyzeResumeRequest.FromString,
+                    response_serializer=shared_dot_proto_dot_resume__pb2.AnalyzeResumeResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -86,6 +102,33 @@ class ResumeService(object):
             '/resume.ResumeService/TailorResume',
             shared_dot_proto_dot_resume__pb2.TailorRequest.SerializeToString,
             shared_dot_proto_dot_resume__pb2.TailorResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def AnalyzeResume(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/resume.ResumeService/AnalyzeResume',
+            shared_dot_proto_dot_resume__pb2.AnalyzeResumeRequest.SerializeToString,
+            shared_dot_proto_dot_resume__pb2.AnalyzeResumeResponse.FromString,
             options,
             channel_credentials,
             insecure,

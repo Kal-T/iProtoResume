@@ -87,6 +87,19 @@ message TailorResponse {
 
 service ResumeService {
   rpc TailorResume (TailorRequest) returns (TailorResponse);
+  rpc AnalyzeResume (AnalyzeResumeRequest) returns (AnalyzeResumeResponse);
+}
+
+message AnalyzeResumeRequest {
+  ResumeData resume = 1;
+  string job_description = 2;
+}
+
+message AnalyzeResumeResponse {
+  int32 score = 1;
+  repeated string feedback = 2;
+  repeated string missing_keywords = 3;
+  string reasoning = 4;
 }
 
 service ResumePersistenceService {

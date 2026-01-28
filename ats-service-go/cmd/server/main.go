@@ -5,16 +5,15 @@ import (
 	"log"
 	"net"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/iprotoresume/ats-service-go/internal/models"
-	"github.com/iprotoresume/ats-service-go/internal/scorer"
 	pb "github.com/iprotoresume/shared/proto"
 	"github.com/lib/pq"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/encoding/protojson"
 	"gorm.io/driver/postgres"
@@ -29,29 +28,28 @@ const (
 type server struct {
 	pb.UnimplementedATSServiceServer
 	pb.UnimplementedResumePersistenceServiceServer
-	DB *gorm.DB
+	DB        *gorm.DB
+	RAGClient pb.ResumeServiceClient
 }
 
 func (s *server) ValidateResume(ctx context.Context, req *pb.ValidationRequest) (*pb.ATSScore, error) {
 	log.Printf("Received Validation Request for: %s", req.Resume.FullName)
 
-	// Combine resume fields into a single text blob for analysis
-	var resumeTextBuilder strings.Builder
-	resumeTextBuilder.WriteString(req.Resume.Summary + " ")
-	for _, exp := range req.Resume.Experience {
-		resumeTextBuilder.WriteString(exp.Title + " " + exp.Description + " ")
+	// Call RAG Service for AI Analysis
+	ragResp, err := s.RAGClient.AnalyzeResume(ctx, &pb.AnalyzeResumeRequest{
+		Resume:         req.Resume,
+		JobDescription: req.JobDescription,
+	})
+	if err != nil {
+		log.Printf("Error processing RAG analysis: %v", err)
+		return nil, status.Errorf(codes.Internal, "Failed to analyze resume: %v", err)
 	}
-	for _, skill := range req.Resume.Skills {
-		resumeTextBuilder.WriteString(skill + " ")
-	}
-
-	// Perform Analysis
-	result := scorer.Calculate(resumeTextBuilder.String(), req.JobDescription)
 
 	return &pb.ATSScore{
-		Score:           result.Score,
-		MissingKeywords: result.MissingKeywords,
-		Feedback:        result.Feedback,
+		Score:           ragResp.Score,
+		MissingKeywords: ragResp.MissingKeywords,
+		Feedback:        ragResp.Feedback,
+		Reasoning:       ragResp.Reasoning,
 	}, nil
 }
 
@@ -191,8 +189,24 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
+	// Connect to RAG Service (Python)
+	// Default to localhost:50051 if not set
+	ragHost := os.Getenv("RAG_SERVICE_HOST")
+	if ragHost == "" {
+		ragHost = "localhost:50051"
+	}
+	ragConn, err := grpc.NewClient(ragHost, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("failed to connect to RAG service: %v", err)
+	}
+	defer ragConn.Close()
+	ragClient := pb.NewResumeServiceClient(ragConn)
+
 	s := grpc.NewServer()
-	srv := &server{DB: db}
+	srv := &server{
+		DB:        db,
+		RAGClient: ragClient,
+	}
 
 	pb.RegisterATSServiceServer(s, srv)
 	pb.RegisterResumePersistenceServiceServer(s, srv)

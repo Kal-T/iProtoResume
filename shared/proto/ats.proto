@@ -15,6 +15,7 @@ message ATSScore {
   int32 score = 1; // 0-100
   repeated string feedback = 2;
   repeated string missing_keywords = 3;
+  string reasoning = 4;
 }
 
 service ATSService {

@@ -6,6 +6,7 @@ type ATSScore struct {
 	Score           int32    `json:"score"`
 	Feedback        []string `json:"feedback"`
 	MissingKeywords []string `json:"missingKeywords"`
+	Reasoning       *string  `json:"reasoning,omitempty"`
 }
 
 type Achievement struct {
