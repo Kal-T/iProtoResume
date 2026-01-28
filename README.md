@@ -6,7 +6,18 @@
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat&logo=docker)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-**iProtoResume** is a production-grade, AI-powered Resume Builder built with a Microservices architecture. It leverages RAG (Retrieval-Augmented Generation) to tailor resumes to specific job descriptions and features a dedicated ATS (Applicant Tracking System) scoring engine to ensure high visibility.
+**iProtoResume** is a production-grade, AI-powered Resume Builder built with a Microservices architecture. It leverages **Google Gemini** and **RAG (Retrieval-Augmented Generation)** to tailor resumes to specific job descriptions and features a dedicated **AI ATS Scoring Engine** to ensure high visibility.
+
+---
+
+## ✨ Key Features
+
+- **🤖 AI Resume Tailoring**: Instantly adapts your resume to match job descriptions using semantic analysis (Gemini 1.5 Flash).
+- **📝 Smart Cover Letters**: Generates professional, editable cover letters tailored to the role.
+- **📊 AI ATS Scoring**: Advanced semantic scoring with detailed reasoning, feedback, and keyword gap analysis.
+- **👁️ Interactive Preview**: Real-time "Diff" view showing exactly what the AI changed.
+- **📄 PDF Export**: Download tailored resumes and cover letters in professional formats.
+- **🏗️ Microservices**: Scalable architecture using Go (Gateway/ATS) and Python (AI/RAG) connected via gRPC.
 
 ---
 
@@ -29,7 +40,7 @@ graph TD
     GW -->|gRPC| RAG
     GW -->|gRPC| ATS
     RAG -->|Vector Search| VecDB
-    ATS -->|Regex/Analysis| ATS
+    ATS -->|Scoring Logic| ATS
     GW -->|SQL| DB
 ```
 
@@ -37,10 +48,10 @@ graph TD
 
 | Component | Technology | Description |
 |-----------|------------|-------------|
-| **Frontend** | React, TailwindCSS, Vite | Responsive, modern UI/UX. |
+| **Frontend** | React, TailwindCSS, Vite | Responsive, modern UI/UX with real-time previews. |
 | **Gateway** | Go, gqlgen | GraphQL entry point, request orchestration. |
-| **RAG Service** | Python, FastAPI, gRPC, LangChain | AI logic for resume tailoring and cover letters. |
-| **ATS Service** | Go, gRPC | High-performance keyword analysis and scoring. |
+| **RAG Service** | Python, gRPC, Gemini, ChromaDB | AI logic for tailoring, cover letters, and semantic search. |
+| **ATS Service** | Go, gRPC | Orchestrates scoring and analysis. |
 | **Data** | PostgreSQL, ChromaDB | User data & Vector embeddings. |
 | **Infra** | Docker Compose | Optimized for local dev (Apple Silicon/M-series support). |
 
@@ -50,10 +61,10 @@ graph TD
 
 ### Prerequisites
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop) (Ensure `docker-compose` is available)
 - [Go 1.21+](https://go.dev/dl/)
 - [Python 3.10+](https://www.python.org/downloads/)
 - [Node.js 18+](https://nodejs.org/)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop) (Optional, for containerized run)
 
 ### Installation
 
@@ -67,7 +78,7 @@ graph TD
    Copy the example environment file and configure your API keys.
    ```bash
    cp .env.example .env
-   # Edit .env with your OpenAI/Gemini keys
+   # CRITICAL: Edit .env and add your GOOGLE_API_KEY (Gemini)
    ```
 
 3. **Generate Protocol Buffers:**
@@ -77,15 +88,29 @@ graph TD
    ```
 
 4. **Start the Stack:**
+   
+   **Option A: Local Development (Recommended)**
    ```bash
-   make run
-   # OR
+   # Terminal 1: Frontend
+   cd frontend && npm install && npm run dev
+   
+   # Terminal 2: Gateway
+   go run cmd/gateway/main.go
+   
+   # Terminal 3: ATS Service
+   go run cmd/server/main.go
+   
+   # Terminal 4: RAG Service
+   python3 rag-service-python/main.py
+   ```
+
+   **Option B: Docker Compose**
+   ```bash
    docker-compose up --build
    ```
 
-   - **Frontend:** [http://localhost:5173](http://localhost:5173) (once implemented)
+   - **Frontend:** [http://localhost:5173](http://localhost:5173)
    - **Gateway Playground:** [http://localhost:8080](http://localhost:8080)
-   - **RAG Service:** [localhost:50051](localhost:50051)
 
 ---
 
@@ -96,8 +121,8 @@ graph TD
 ├── gateway-go/            # Go GraphQL Gateway
 │   ├── cmd/               # Entry points
 │   └── internal/          # Business logic & resolvers
-├── rag-service-python/    # Python AI Service
-├── ats-service-go/        # Go ATS Scoring Service
+├── rag-service-python/    # Python AI Service (Gemini + ChromaDB)
+├── ats-service-go/        # Go ATS Service
 ├── shared/
 │   └── proto/             # Protocol Buffer Definitions (.proto)
 ├── tests/                 # E2E and Integration tests
