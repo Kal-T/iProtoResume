@@ -39,7 +39,7 @@ func (r *mutationResolver) TailorResume(ctx context.Context, input model.TailorR
 		JobDescription: input.JobDescription,
 	}
 
-	resp, err := r.TailorClient.Client.TailorResume(ctx, req)
+	resp, err := r.AIClient.Client.TailorResume(ctx, req)
 	if err != nil {
 		return nil, fmt.Errorf("failed to tailor resume: %w", err)
 	}
@@ -52,7 +52,7 @@ func (r *mutationResolver) TailorResume(ctx context.Context, input model.TailorR
 
 // ValidateResume is the resolver for the validateResume field.
 func (r *mutationResolver) ValidateResume(ctx context.Context, input model.ValidateResumeInput) (*model.ATSScore, error) {
-	req := &pb.ValidationRequest{
+	req := &pb.AnalyzeResumeRequest{
 		Resume: &pb.ResumeData{
 			FullName:     input.Resume.FullName,
 			Email:        input.Resume.Email,
@@ -76,7 +76,7 @@ func (r *mutationResolver) ValidateResume(ctx context.Context, input model.Valid
 		JobDescription: input.JobDescription,
 	}
 
-	resp, err := r.ATSClient.Client.ValidateResume(ctx, req)
+	resp, err := r.AIClient.Client.AnalyzeResume(ctx, req)
 	if err != nil {
 		return nil, fmt.Errorf("failed to validate resume: %w", err)
 	}

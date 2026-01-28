@@ -1272,8 +1272,8 @@ const file_shared_proto_resume_proto_rawDesc = "" +
 	"\x13DeleteResumeRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"0\n" +
 	"\x14DeleteResumeResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess2\x9c\x01\n" +
-	"\rResumeService\x12=\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess2\x98\x01\n" +
+	"\tAIService\x12=\n" +
 	"\fTailorResume\x12\x15.resume.TailorRequest\x1a\x16.resume.TailorResponse\x12L\n" +
 	"\rAnalyzeResume\x12\x1c.resume.AnalyzeResumeRequest\x1a\x1d.resume.AnalyzeResumeResponse2\xeb\x01\n" +
 	"\x18ResumePersistenceService\x12<\n" +
@@ -1329,13 +1329,13 @@ var file_shared_proto_resume_proto_depIdxs = []int32{
 	0,  // 10: resume.SavedResume.resume_data:type_name -> resume.ResumeData
 	0,  // 11: resume.SaveResumeRequest.resume:type_name -> resume.ResumeData
 	12, // 12: resume.ListResumesResponse.resumes:type_name -> resume.SavedResume
-	8,  // 13: resume.ResumeService.TailorResume:input_type -> resume.TailorRequest
-	10, // 14: resume.ResumeService.AnalyzeResume:input_type -> resume.AnalyzeResumeRequest
+	8,  // 13: resume.AIService.TailorResume:input_type -> resume.TailorRequest
+	10, // 14: resume.AIService.AnalyzeResume:input_type -> resume.AnalyzeResumeRequest
 	13, // 15: resume.ResumePersistenceService.SaveResume:input_type -> resume.SaveResumeRequest
 	14, // 16: resume.ResumePersistenceService.ListResumes:input_type -> resume.ListResumesRequest
 	16, // 17: resume.ResumePersistenceService.DeleteResume:input_type -> resume.DeleteResumeRequest
-	9,  // 18: resume.ResumeService.TailorResume:output_type -> resume.TailorResponse
-	11, // 19: resume.ResumeService.AnalyzeResume:output_type -> resume.AnalyzeResumeResponse
+	9,  // 18: resume.AIService.TailorResume:output_type -> resume.TailorResponse
+	11, // 19: resume.AIService.AnalyzeResume:output_type -> resume.AnalyzeResumeResponse
 	12, // 20: resume.ResumePersistenceService.SaveResume:output_type -> resume.SavedResume
 	15, // 21: resume.ResumePersistenceService.ListResumes:output_type -> resume.ListResumesResponse
 	17, // 22: resume.ResumePersistenceService.DeleteResume:output_type -> resume.DeleteResumeResponse

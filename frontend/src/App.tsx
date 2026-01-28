@@ -172,10 +172,22 @@ function App() {
 
   const handleApplyTailoredChanges = () => {
     if (pendingTailoredData) {
-      setResume(prev => ({
-        ...prev,
+      const updatedResume = {
+        ...resume,
         ...pendingTailoredData
-      }));
+      };
+
+      // Map flat AI skills to skillGroups for UI compatibility
+      if (pendingTailoredData.skills && pendingTailoredData.skills.length > 0) {
+        updatedResume.skillGroups = [
+          {
+            category: "Tailored Skills",
+            items: pendingTailoredData.skills
+          }
+        ];
+      }
+
+      setResume(updatedResume);
       setAtsResult(null); // Clear previous ATS result as content changed
     }
     setShowTailorModal(false);

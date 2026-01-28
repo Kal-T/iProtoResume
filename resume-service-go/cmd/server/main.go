@@ -8,12 +8,11 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/iprotoresume/ats-service-go/internal/models"
+	"github.com/iprotoresume/resume-service-go/internal/models"
 	pb "github.com/iprotoresume/shared/proto"
 	"github.com/lib/pq"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/encoding/protojson"
 	"gorm.io/driver/postgres"
@@ -21,36 +20,13 @@ import (
 )
 
 const (
-	defaultPort = "50052"
+	defaultPort = "50053"
 	dbDSN       = "host=localhost user=user password=password dbname=iprotoresume port=5432 sslmode=disable TimeZone=UTC"
 )
 
 type server struct {
-	pb.UnimplementedATSServiceServer
 	pb.UnimplementedResumePersistenceServiceServer
-	DB        *gorm.DB
-	RAGClient pb.ResumeServiceClient
-}
-
-func (s *server) ValidateResume(ctx context.Context, req *pb.ValidationRequest) (*pb.ATSScore, error) {
-	log.Printf("Received Validation Request for: %s", req.Resume.FullName)
-
-	// Call RAG Service for AI Analysis
-	ragResp, err := s.RAGClient.AnalyzeResume(ctx, &pb.AnalyzeResumeRequest{
-		Resume:         req.Resume,
-		JobDescription: req.JobDescription,
-	})
-	if err != nil {
-		log.Printf("Error processing RAG analysis: %v", err)
-		return nil, status.Errorf(codes.Internal, "Failed to analyze resume: %v", err)
-	}
-
-	return &pb.ATSScore{
-		Score:           ragResp.Score,
-		MissingKeywords: ragResp.MissingKeywords,
-		Feedback:        ragResp.Feedback,
-		Reasoning:       ragResp.Reasoning,
-	}, nil
+	DB *gorm.DB
 }
 
 func (s *server) SaveResume(ctx context.Context, req *pb.SaveResumeRequest) (*pb.SavedResume, error) {
@@ -164,7 +140,7 @@ func (s *server) DeleteResume(ctx context.Context, req *pb.DeleteResumeRequest) 
 }
 
 func main() {
-	port := os.Getenv("ATS_SERVICE_PORT")
+	port := os.Getenv("RESUME_SERVICE_PORT")
 	if port == "" {
 		port = defaultPort
 	}
@@ -189,29 +165,14 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	// Connect to RAG Service (Python)
-	// Default to localhost:50051 if not set
-	ragHost := os.Getenv("RAG_SERVICE_HOST")
-	if ragHost == "" {
-		ragHost = "localhost:50051"
-	}
-	ragConn, err := grpc.NewClient(ragHost, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("failed to connect to RAG service: %v", err)
-	}
-	defer ragConn.Close()
-	ragClient := pb.NewResumeServiceClient(ragConn)
-
 	s := grpc.NewServer()
 	srv := &server{
-		DB:        db,
-		RAGClient: ragClient,
+		DB: db,
 	}
 
-	pb.RegisterATSServiceServer(s, srv)
 	pb.RegisterResumePersistenceServiceServer(s, srv)
 
-	log.Printf("ATS Service (with Persistence) listening on :%s", port)
+	log.Printf("Resume Persistence Service listening on :%s", port)
 
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)

@@ -19,139 +19,139 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ResumeService_TailorResume_FullMethodName  = "/resume.ResumeService/TailorResume"
-	ResumeService_AnalyzeResume_FullMethodName = "/resume.ResumeService/AnalyzeResume"
+	AIService_TailorResume_FullMethodName  = "/resume.AIService/TailorResume"
+	AIService_AnalyzeResume_FullMethodName = "/resume.AIService/AnalyzeResume"
 )
 
-// ResumeServiceClient is the client API for ResumeService service.
+// AIServiceClient is the client API for AIService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ResumeServiceClient interface {
+type AIServiceClient interface {
 	TailorResume(ctx context.Context, in *TailorRequest, opts ...grpc.CallOption) (*TailorResponse, error)
 	AnalyzeResume(ctx context.Context, in *AnalyzeResumeRequest, opts ...grpc.CallOption) (*AnalyzeResumeResponse, error)
 }
 
-type resumeServiceClient struct {
+type aIServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewResumeServiceClient(cc grpc.ClientConnInterface) ResumeServiceClient {
-	return &resumeServiceClient{cc}
+func NewAIServiceClient(cc grpc.ClientConnInterface) AIServiceClient {
+	return &aIServiceClient{cc}
 }
 
-func (c *resumeServiceClient) TailorResume(ctx context.Context, in *TailorRequest, opts ...grpc.CallOption) (*TailorResponse, error) {
+func (c *aIServiceClient) TailorResume(ctx context.Context, in *TailorRequest, opts ...grpc.CallOption) (*TailorResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(TailorResponse)
-	err := c.cc.Invoke(ctx, ResumeService_TailorResume_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, AIService_TailorResume_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *resumeServiceClient) AnalyzeResume(ctx context.Context, in *AnalyzeResumeRequest, opts ...grpc.CallOption) (*AnalyzeResumeResponse, error) {
+func (c *aIServiceClient) AnalyzeResume(ctx context.Context, in *AnalyzeResumeRequest, opts ...grpc.CallOption) (*AnalyzeResumeResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AnalyzeResumeResponse)
-	err := c.cc.Invoke(ctx, ResumeService_AnalyzeResume_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, AIService_AnalyzeResume_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ResumeServiceServer is the server API for ResumeService service.
-// All implementations must embed UnimplementedResumeServiceServer
+// AIServiceServer is the server API for AIService service.
+// All implementations must embed UnimplementedAIServiceServer
 // for forward compatibility.
-type ResumeServiceServer interface {
+type AIServiceServer interface {
 	TailorResume(context.Context, *TailorRequest) (*TailorResponse, error)
 	AnalyzeResume(context.Context, *AnalyzeResumeRequest) (*AnalyzeResumeResponse, error)
-	mustEmbedUnimplementedResumeServiceServer()
+	mustEmbedUnimplementedAIServiceServer()
 }
 
-// UnimplementedResumeServiceServer must be embedded to have
+// UnimplementedAIServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedResumeServiceServer struct{}
+type UnimplementedAIServiceServer struct{}
 
-func (UnimplementedResumeServiceServer) TailorResume(context.Context, *TailorRequest) (*TailorResponse, error) {
+func (UnimplementedAIServiceServer) TailorResume(context.Context, *TailorRequest) (*TailorResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method TailorResume not implemented")
 }
-func (UnimplementedResumeServiceServer) AnalyzeResume(context.Context, *AnalyzeResumeRequest) (*AnalyzeResumeResponse, error) {
+func (UnimplementedAIServiceServer) AnalyzeResume(context.Context, *AnalyzeResumeRequest) (*AnalyzeResumeResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method AnalyzeResume not implemented")
 }
-func (UnimplementedResumeServiceServer) mustEmbedUnimplementedResumeServiceServer() {}
-func (UnimplementedResumeServiceServer) testEmbeddedByValue()                       {}
+func (UnimplementedAIServiceServer) mustEmbedUnimplementedAIServiceServer() {}
+func (UnimplementedAIServiceServer) testEmbeddedByValue()                   {}
 
-// UnsafeResumeServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ResumeServiceServer will
+// UnsafeAIServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to AIServiceServer will
 // result in compilation errors.
-type UnsafeResumeServiceServer interface {
-	mustEmbedUnimplementedResumeServiceServer()
+type UnsafeAIServiceServer interface {
+	mustEmbedUnimplementedAIServiceServer()
 }
 
-func RegisterResumeServiceServer(s grpc.ServiceRegistrar, srv ResumeServiceServer) {
-	// If the following call panics, it indicates UnimplementedResumeServiceServer was
+func RegisterAIServiceServer(s grpc.ServiceRegistrar, srv AIServiceServer) {
+	// If the following call panics, it indicates UnimplementedAIServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&ResumeService_ServiceDesc, srv)
+	s.RegisterService(&AIService_ServiceDesc, srv)
 }
 
-func _ResumeService_TailorResume_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AIService_TailorResume_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(TailorRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ResumeServiceServer).TailorResume(ctx, in)
+		return srv.(AIServiceServer).TailorResume(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ResumeService_TailorResume_FullMethodName,
+		FullMethod: AIService_TailorResume_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ResumeServiceServer).TailorResume(ctx, req.(*TailorRequest))
+		return srv.(AIServiceServer).TailorResume(ctx, req.(*TailorRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ResumeService_AnalyzeResume_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AIService_AnalyzeResume_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AnalyzeResumeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ResumeServiceServer).AnalyzeResume(ctx, in)
+		return srv.(AIServiceServer).AnalyzeResume(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ResumeService_AnalyzeResume_FullMethodName,
+		FullMethod: AIService_AnalyzeResume_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ResumeServiceServer).AnalyzeResume(ctx, req.(*AnalyzeResumeRequest))
+		return srv.(AIServiceServer).AnalyzeResume(ctx, req.(*AnalyzeResumeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// ResumeService_ServiceDesc is the grpc.ServiceDesc for ResumeService service.
+// AIService_ServiceDesc is the grpc.ServiceDesc for AIService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var ResumeService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "resume.ResumeService",
-	HandlerType: (*ResumeServiceServer)(nil),
+var AIService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "resume.AIService",
+	HandlerType: (*AIServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "TailorResume",
-			Handler:    _ResumeService_TailorResume_Handler,
+			Handler:    _AIService_TailorResume_Handler,
 		},
 		{
 			MethodName: "AnalyzeResume",
-			Handler:    _ResumeService_AnalyzeResume_Handler,
+			Handler:    _AIService_AnalyzeResume_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

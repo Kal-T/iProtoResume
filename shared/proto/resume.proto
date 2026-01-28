@@ -85,7 +85,7 @@ message TailorResponse {
   string cover_letter = 2;
 }
 
-service ResumeService {
+service AIService {
   rpc TailorResume (TailorRequest) returns (TailorResponse);
   rpc AnalyzeResume (AnalyzeResumeRequest) returns (AnalyzeResumeResponse);
 }

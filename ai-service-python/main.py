@@ -17,7 +17,7 @@ from langchain_core.prompts import PromptTemplate
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-class ResumeService(resume_pb2_grpc.ResumeServiceServicer):
+class ResumeService(resume_pb2_grpc.AIServiceServicer):
     def __init__(self):
         self.vector_store = VectorStoreManager()
 
@@ -211,7 +211,7 @@ def serve():
     # settings is already initialized and environment loaded
     port = settings.PORT
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    resume_pb2_grpc.add_ResumeServiceServicer_to_server(ResumeService(), server)
+    resume_pb2_grpc.add_AIServiceServicer_to_server(ResumeService(), server)
     server.add_insecure_port(f'[::]:{port}')
     logger.info(f"RAG Service started on port {port}")
     server.start()

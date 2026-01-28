@@ -5,7 +5,7 @@ import warnings
 
 from shared.proto import resume_pb2 as shared_dot_proto_dot_resume__pb2
 
-GRPC_GENERATED_VERSION = '1.76.0'
+GRPC_GENERATED_VERSION = '1.71.2'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
@@ -18,14 +18,14 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + ' but the generated code in shared/proto/resume_pb2_grpc.py depends on'
+        + f' but the generated code in shared/proto/resume_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
     )
 
 
-class ResumeServiceStub(object):
+class AIServiceStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -35,18 +35,18 @@ class ResumeServiceStub(object):
             channel: A grpc.Channel.
         """
         self.TailorResume = channel.unary_unary(
-                '/resume.ResumeService/TailorResume',
+                '/resume.AIService/TailorResume',
                 request_serializer=shared_dot_proto_dot_resume__pb2.TailorRequest.SerializeToString,
                 response_deserializer=shared_dot_proto_dot_resume__pb2.TailorResponse.FromString,
                 _registered_method=True)
         self.AnalyzeResume = channel.unary_unary(
-                '/resume.ResumeService/AnalyzeResume',
+                '/resume.AIService/AnalyzeResume',
                 request_serializer=shared_dot_proto_dot_resume__pb2.AnalyzeResumeRequest.SerializeToString,
                 response_deserializer=shared_dot_proto_dot_resume__pb2.AnalyzeResumeResponse.FromString,
                 _registered_method=True)
 
 
-class ResumeServiceServicer(object):
+class AIServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def TailorResume(self, request, context):
@@ -62,7 +62,7 @@ class ResumeServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_ResumeServiceServicer_to_server(servicer, server):
+def add_AIServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'TailorResume': grpc.unary_unary_rpc_method_handler(
                     servicer.TailorResume,
@@ -76,13 +76,13 @@ def add_ResumeServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'resume.ResumeService', rpc_method_handlers)
+            'resume.AIService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('resume.ResumeService', rpc_method_handlers)
+    server.add_registered_method_handlers('resume.AIService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class ResumeService(object):
+class AIService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -99,7 +99,7 @@ class ResumeService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/resume.ResumeService/TailorResume',
+            '/resume.AIService/TailorResume',
             shared_dot_proto_dot_resume__pb2.TailorRequest.SerializeToString,
             shared_dot_proto_dot_resume__pb2.TailorResponse.FromString,
             options,
@@ -126,7 +126,7 @@ class ResumeService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/resume.ResumeService/AnalyzeResume',
+            '/resume.AIService/AnalyzeResume',
             shared_dot_proto_dot_resume__pb2.AnalyzeResumeRequest.SerializeToString,
             shared_dot_proto_dot_resume__pb2.AnalyzeResumeResponse.FromString,
             options,

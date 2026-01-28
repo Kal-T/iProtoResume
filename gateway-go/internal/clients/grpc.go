@@ -10,38 +10,18 @@ import (
 	pb "github.com/iprotoresume/shared/proto"
 )
 
-type ValidationClient struct {
-	Client     pb.ATSServiceClient
+type AIClient struct {
+	Client     pb.AIServiceClient
 	Connection *grpc.ClientConn
 }
 
-type TailorClient struct {
-	Client     pb.ResumeServiceClient
+type PersistenceClient struct {
+	Client     pb.ResumePersistenceServiceClient
 	Connection *grpc.ClientConn
 }
 
-func NewATSClient() (*ValidationClient, error) {
-	addr := os.Getenv("ATS_SERVICE_URL")
-	if addr == "" {
-		addr = "127.0.0.1:50052"
-	}
-
-	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		return nil, err
-	}
-
-	client := pb.NewATSServiceClient(conn)
-	log.Printf("Connected to ATS Service at %s", addr)
-
-	return &ValidationClient{
-		Client:     client,
-		Connection: conn,
-	}, nil
-}
-
-func NewResumeClient() (*TailorClient, error) {
-	addr := os.Getenv("RAG_SERVICE_URL")
+func NewAIClient() (*AIClient, error) {
+	addr := os.Getenv("AI_SERVICE_URL")
 	if addr == "" {
 		addr = "127.0.0.1:50051"
 	}
@@ -51,25 +31,19 @@ func NewResumeClient() (*TailorClient, error) {
 		return nil, err
 	}
 
-	client := pb.NewResumeServiceClient(conn)
-	log.Printf("Connected to RAG Service at %s", addr)
+	client := pb.NewAIServiceClient(conn)
+	log.Printf("Connected to AI Service at %s", addr)
 
-	return &TailorClient{
+	return &AIClient{
 		Client:     client,
 		Connection: conn,
 	}, nil
 }
 
-type PersistenceClient struct {
-	Client     pb.ResumePersistenceServiceClient
-	Connection *grpc.ClientConn
-}
-
 func NewPersistenceClient() (*PersistenceClient, error) {
-	// Reusing ATS Service URL as it hosts the persistence service
-	addr := os.Getenv("ATS_SERVICE_URL")
+	addr := os.Getenv("RESUME_SERVICE_URL")
 	if addr == "" {
-		addr = "127.0.0.1:50052"
+		addr = "127.0.0.1:50053"
 	}
 
 	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))

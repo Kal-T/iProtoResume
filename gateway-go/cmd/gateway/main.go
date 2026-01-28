@@ -24,17 +24,11 @@ func main() {
 		port = defaultPort
 	}
 
-	atsClient, err := clients.NewATSClient()
+	aiClient, err := clients.NewAIClient()
 	if err != nil {
-		log.Fatalf("failed to create ATS client: %v", err)
+		log.Fatalf("failed to create AI client: %v", err)
 	}
-	defer atsClient.Connection.Close()
-
-	resumeClient, err := clients.NewResumeClient()
-	if err != nil {
-		log.Fatalf("failed to create Resume client: %v", err)
-	}
-	defer resumeClient.Connection.Close()
+	defer aiClient.Connection.Close()
 
 	persistenceClient, err := clients.NewPersistenceClient()
 	if err != nil {
@@ -43,8 +37,7 @@ func main() {
 	defer persistenceClient.Connection.Close()
 
 	srv := handler.New(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{
-		ATSClient:         atsClient,
-		TailorClient:      resumeClient,
+		AIClient:          aiClient,
 		PersistenceClient: persistenceClient,
 	}}))
 

@@ -1,58 +1,57 @@
 # iProtoResume 🚀
 
-[![Go](https://img.shields.io/badge/Go-1.21+-00ADD8?style=flat&logo=go)](https://go.dev/)
+[![Go](https://img.shields.io/badge/Go-1.25+-00ADD8?style=flat&logo=go)](https://go.dev/)
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat&logo=python)](https://www.python.org/)
 [![React](https://img.shields.io/badge/React-18-61DAFB?style=flat&logo=react)](https://reactjs.org/)
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat&logo=docker)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-**iProtoResume** is a production-grade, AI-powered Resume Builder built with a Microservices architecture. It leverages **Google Gemini** and **RAG (Retrieval-Augmented Generation)** to tailor resumes to specific job descriptions and features a dedicated **AI ATS Scoring Engine** to ensure high visibility.
+**iProtoResume** is a production-grade, AI-powered Resume Builder built with a scalable Microservices architecture. It leverages **Google Gemini 1.5** to intelligently tailor your resume to any job description, generating smart cover letters and providing ATS score analysis to maximize interview chances.
 
 ---
 
 ## ✨ Key Features
 
-- **🤖 AI Resume Tailoring**: Instantly adapts your resume to match job descriptions using semantic analysis (Gemini 1.5 Flash).
-- **📝 Smart Cover Letters**: Generates professional, editable cover letters tailored to the role.
-- **📊 AI ATS Scoring**: Advanced semantic scoring with detailed reasoning, feedback, and keyword gap analysis.
+- **🤖 AI Resume Tailoring**: Instantly adapts your resume to match job descriptions using semantic analysis.
+- **📝 Smart Cover Letters**: Generates professional, editable cover letters tailored to the role (3-paragraph structure).
+- **📊 AI ATS Scoring**: Advanced semantic scoring with detailed reasoning, actionable feedback, and keyword gap analysis.
 - **👁️ Interactive Preview**: Real-time "Diff" view showing exactly what the AI changed.
-- **📄 PDF Export**: Download tailored resumes and cover letters in professional formats.
-- **🏗️ Microservices**: Scalable architecture using Go (Gateway/ATS) and Python (AI/RAG) connected via gRPC.
+- **📄 Professional Templates**: Modern, split-screen designs with PDF export support.
+- **🏗️ Microservices**: Scalable architecture separating Persistence (Go) and Intelligence (Python).
 
 ---
 
 ## 🏗 Architecture
 
-The system is built on a "Contract-First" design using Protocol Buffers (gRPC) for high-performance inter-service communication.
+The system follows a refined 3-Service Architecture using Protocol Buffers (gRPC) for efficient communication.
 
 ```mermaid
 graph TD
     User((User))
     FE["Frontend (React/Tailwind)"]
     GW["Gateway (Go/GraphQL)"]
-    RAG["RAG Service (Python/gRPC)"]
-    ATS["ATS Service (Go/gRPC)"]
+    AI["AI Service (Python/gRPC)"]
+    RES["Resume Service (Go/gRPC)"]
     DB[(PostgreSQL)]
     VecDB[(ChromaDB)]
 
     User -->|HTTP| FE
     FE -->|GraphQL| GW
-    GW -->|gRPC| RAG
-    GW -->|gRPC| ATS
-    RAG -->|Vector Search| VecDB
-    ATS -->|Scoring & Persistence| ATS
-    ATS -->|SQL| DB
+    GW -->|gRPC/Intelligence| AI
+    GW -->|gRPC/Persistence| RES
+    AI -->|Vector Search| VecDB
+    RES -->|SQL| DB
 ```
 
 ## 🛠 Tech Stack
 
 | Component | Technology | Description |
 |-----------|------------|-------------|
-| **Frontend** | React, TailwindCSS, Vite | Responsive, modern UI/UX with real-time previews. |
-| **Gateway** | Go, gqlgen | GraphQL entry point, request orchestration. |
-| **RAG Service** | Python, gRPC, Gemini, ChromaDB | AI logic for tailoring, cover letters, and semantic search. |
-| **ATS Service** | Go, gRPC | Orchestrates scoring, analysis, and data persistence. |
-| **Data** | PostgreSQL, ChromaDB | User data & Vector embeddings. |
+| **Frontend** | React, TailwindCSS, Vite | Responsive UI/UX with PDF generation and real-time previews. |
+| **Gateway** | Go, gqlgen | GraphQL entry point, request orchestration between services. |
+| **AI Service** | Python, gRPC, Gemini, ChromaDB | The "Brain". Handles Tailoring, Scoring, Cover Letters, and RAG. |
+| **Resume Service** | Go, gRPC, GORM | The "Vault". Handles data persistence, CRUD operations, and Postgres management. |
+| **Data** | PostgreSQL, ChromaDB | Relational User Data & Vector Embeddings. |
 | **Infra** | Docker Compose | Optimized for local dev (Apple Silicon/M-series support). |
 
 ---
@@ -61,10 +60,10 @@ graph TD
 
 ### Prerequisites
 
-- [Go 1.21+](https://go.dev/dl/)
+- [Go 1.25+](https://go.dev/dl/)
 - [Python 3.10+](https://www.python.org/downloads/)
 - [Node.js 18+](https://nodejs.org/)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop) (Optional, for containerized run)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop) (Optional)
 
 ### Installation
 
@@ -78,7 +77,7 @@ graph TD
    Copy the example environment file and configure your API keys.
    ```bash
    cp .env.example .env
-   # CRITICAL: Edit .env and add your GOOGLE_API_KEY (Gemini)
+   # CRITICAL: Edit .env and add your GOOGLE_API_KEY (from Google AI Studio)
    ```
 
 3. **Generate Protocol Buffers:**
@@ -86,6 +85,7 @@ graph TD
    ```bash
    make proto
    ```
+   *(Note: If you encounter Python path issues, refer to `manual_fix_python.md`)*
 
 4. **Start the Stack:**
    
@@ -94,14 +94,16 @@ graph TD
    # Terminal 1: Frontend
    cd frontend && npm install && npm run dev
    
-   # Terminal 2: Gateway
+   # Terminal 2: Gateway (Port 8080)
    go run cmd/gateway/main.go
    
-   # Terminal 3: ATS Service
-   go run cmd/server/main.go
+   # Terminal 3: Resume Service (Port 50053)
+   cd resume-service-go && go run cmd/server/main.go
    
-   # Terminal 4: RAG Service
-   python3 rag-service-python/main.py
+   # Terminal 4: AI Service (Port 50051)
+   cd ai-service-python
+   # Ensure venv is active and deps installed
+   python3 main.py
    ```
 
    **Option B: Docker Compose**
@@ -118,30 +120,12 @@ graph TD
 
 ```bash
 ├── frontend/               # React + Tailwind application
-├── gateway-go/            # Go GraphQL Gateway
-│   ├── cmd/               # Entry points
-│   └── internal/          # Business logic & resolvers
-├── rag-service-python/    # Python AI Service (Gemini + ChromaDB)
-├── ats-service-go/        # Go ATS Service
+├── gateway-go/            # Go GraphQL Gateway (Orchestrator)
+├── ai-service-python/     # Python AI Service (The Brain)
+├── resume-service-go/     # Go Persistence Service (The Vault)
 ├── shared/
 │   └── proto/             # Protocol Buffer Definitions (.proto)
-├── tests/                 # E2E and Integration tests
 └── docker-compose.yml     # Infrastructure config
-```
-
-## 🧪 Testing
-
-Run integration tests using our Makefile helper:
-
-```bash
-make test-integration
-```
-
-Or run unit tests for specific services:
-
-```bash
-cd gateway-go && go test ./...
-cd rag-service-python && pytest
 ```
 
 ## 📜 License
