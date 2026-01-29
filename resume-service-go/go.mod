@@ -1,6 +1,6 @@
 module github.com/iprotoresume/resume-service-go
 
-go 1.25.6
+go 1.23
 
 replace github.com/iprotoresume => ../
 

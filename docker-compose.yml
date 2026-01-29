@@ -1,8 +1,19 @@
 version: '3.8'
 
 services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - gateway
+    environment:
+      - VITE_GRAPHQL_URL=http://localhost:8080/graphql
+
   gateway:
-    build: ./gateway-go
+    build:
+      context: .
+      dockerfile: ./gateway-go/Dockerfile
     ports:
       - "8080:8080"
     environment:
@@ -14,11 +25,14 @@ services:
       - resume-service
 
   ai-service:
-    build: ./ai-service-python
+    build:
+      context: .
+      dockerfile: ai-service-python/Dockerfile
     ports:
       - "50051:50051"
     environment:
       - CHROMA_DB_PATH=/chroma/chroma
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
     volumes:
       - chroma-data:/chroma
     deploy:
@@ -27,14 +41,17 @@ services:
           memory: 4G
 
   resume-service:
-    build: ./resume-service-go
+    build:
+      context: .
+      dockerfile: ./resume-service-go/Dockerfile
     ports:
       - "50053:50053"
     environment:
       - RESUME_SERVICE_PORT=50053
       - DATABASE_URL=host=postgres user=user password=password dbname=iprotoresume port=5432 sslmode=disable TimeZone=UTC
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   postgres:
     image: postgres:15-alpine
@@ -46,6 +63,11 @@ services:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U user -d iprotoresume" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   chromadb:
     image: chromadb/chroma:latest
@@ -63,7 +85,3 @@ volumes:
     driver: local
   chroma-data:
     driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${PWD}/chroma-data
