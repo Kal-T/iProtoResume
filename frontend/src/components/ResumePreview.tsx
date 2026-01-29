@@ -2,6 +2,7 @@ import React from 'react';
 import type { ResumeData } from '../types';
 import { ModernTemplate } from './templates/ModernTemplate';
 import { ClassicTemplate } from './templates/ClassicTemplate';
+import { SidebarTemplate } from './templates/SidebarTemplate';
 
 interface ResumePreviewProps {
     data: ResumeData;
@@ -19,9 +20,14 @@ export const ResumePreview = React.forwardRef<HTMLDivElement, ResumePreviewProps
         <div ref={ref}>
             {templateId === 'modern' ? (
                 <ModernTemplate data={data} />
-            ) : (
+            ) : templateId === 'classic' ? (
                 <ClassicTemplate data={data} />
+            ) : templateId === 'sidebar' ? (
+                <SidebarTemplate data={data} />
+            ) : (
+                <ModernTemplate data={data} />
             )}
         </div>
     );
 });
+

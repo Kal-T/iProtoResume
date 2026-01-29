@@ -118,6 +118,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                             >
                                 <option value="modern">Modern (Split Screen)</option>
                                 <option value="classic">Classic (Single Column)</option>
+                                <option value="sidebar">Sidebar (Dark Side Panel)</option>
                             </select>
                         </div>
                     </div>
