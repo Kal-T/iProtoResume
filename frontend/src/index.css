@@ -23,7 +23,6 @@
   }
 
   /* Prevent page breaks inside important elements */
-  section,
   .break-inside-avoid {
     break-inside: avoid;
     page-break-inside: avoid;

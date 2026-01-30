@@ -178,17 +178,19 @@ export const ModernTemplate = ({ data }: TemplateProps) => {
 
                             <div className="flex flex-col gap-6">
                                 {data.experience.map((exp, idx) => (
-                                    <div key={idx} className="relative pl-4 border-l-2 border-gray-200 break-inside-avoid">
+                                    <div key={idx} className="relative pl-4 border-l-2 border-gray-200">
                                         {/* Project Timeline Dot */}
                                         <div className="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full" style={{ backgroundColor: themeColor }}></div>
 
-                                        <div className="flex justify-between items-baseline mb-1">
-                                            <h4 className="font-bold text-gray-800 text-sm">{exp.title}</h4>
-                                            <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wide">
-                                                {exp.startDate} - {exp.endDate || 'Present'}
-                                            </span>
+                                        <div className="break-inside-avoid text-left">
+                                            <div className="flex justify-between items-baseline mb-1">
+                                                <h4 className="font-bold text-gray-800 text-sm">{exp.title}</h4>
+                                                <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wide">
+                                                    {exp.startDate} - {exp.endDate || 'Present'}
+                                                </span>
+                                            </div>
+                                            <h5 className="text-xs font-bold mb-2 uppercase" style={{ color: themeColor }}>{exp.company}</h5>
                                         </div>
-                                        <h5 className="text-xs font-bold mb-2 uppercase" style={{ color: themeColor }}>{exp.company}</h5>
                                         <RichText text={exp.description} className="text-xs text-gray-600 whitespace-pre-line leading-relaxed" />
                                     </div>
                                 ))}
@@ -230,22 +232,7 @@ export const ModernTemplate = ({ data }: TemplateProps) => {
                         </section>
                     )}
 
-                    {data.education && data.education.length > 0 && (
-                        <section>
-                            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 mt-6">Education</h3>
-                            <div className="flex flex-col gap-4">
-                                {data.education.map((edu, idx) => (
-                                    <div key={idx} className="break-inside-avoid">
-                                        <h4 className="font-bold text-gray-800 text-sm">{edu.degree}</h4>
-                                        <div className="flex justify-between text-xs mt-1">
-                                            <span className="font-medium" style={{ color: themeColor }}>{edu.institution}</span>
-                                            <span className="text-gray-500">{edu.graduationDate}</span>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </section>
-                    )}
+
 
                 </div>
 
@@ -322,6 +309,26 @@ export const ModernTemplate = ({ data }: TemplateProps) => {
                             </div>
                         </section>
                     ) : null}
+
+                    {/* Education */}
+                    {data.education && data.education.length > 0 && (
+                        <section>
+                            <h3 className="text-xs font-bold text-white uppercase tracking-widest border-b border-white/30 pb-2 mb-4 opacity-90">
+                                Education
+                            </h3>
+                            <div className="flex flex-col gap-4">
+                                {data.education.map((edu, idx) => (
+                                    <div key={idx} className="break-inside-avoid">
+                                        <h4 className="font-bold text-white mb-0.5">{edu.degree}</h4>
+                                        <div className="flex justify-between text-[10px] opacity-80 mb-1">
+                                            <span className="font-medium text-white/90">{edu.institution}</span>
+                                            <span>{edu.graduationDate}</span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
 
                     {/* Certificates */}
                     {data.certificates && data.certificates.length > 0 && (
